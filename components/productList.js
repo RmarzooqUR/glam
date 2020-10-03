@@ -1,6 +1,14 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text, Button, FlatList, StyleSheet} from 'react-native';
+import {View,
+  FlatList, 
+  StyleSheet,
+  TouchableOpacity } from 'react-native';
+import { Card,
+  Title,
+  Button } from 'react-native-paper'
 import axios from 'axios'
+
+
 
 export default function ProductList({navigation}){
 	const [productList, setProductList] = useState();
@@ -8,9 +16,12 @@ export default function ProductList({navigation}){
 	useEffect(()=>{
 		// https://gorest.co.in/public-api/posts
 		// http://localhost:8000/products/
-		axios.get('https://93bfb38deafe.ngrok.io/products/')
-			.then((jsonData)=>setProductList(jsonData.data))
-			.catch((err)=> alert("error"+err))
+		axios.get('http://192.168.0.104:8000/products/')
+			.then((jsonData)=>setProductList(
+          jsonData.data
+        )
+      )
+			.catch((err)=> alert(err))
 	},[]);
 
   return (
@@ -20,21 +31,23 @@ export default function ProductList({navigation}){
         	data={productList}
         	keyExtractor={(item)=>item.id}
         	renderItem = {({item})=>(
-        		<View>
-        			<Text>{item.title}</Text>
-        			<Button 
-	            	title='Details' 
-	            	onPress={()=>navigation.navigate('Details')}
-        			/>
-      			</View>
+            <TouchableOpacity style={styles.content}>
+          		<Card>
+                <Card.Content>
+            			<Title>{item.title}</Title>
+            			<Button onPress={()=>navigation.navigate('Details')}>
+                    Details
+            			</Button>
+                </Card.Content>
+        			</Card>
+            </TouchableOpacity>
       		)}
       	/>
     	</View>
     	<View style={styles.content}>
-	    	<Button
-					title='Add'
-					onPress={()=>navigation.navigate('Add')}
-				/>	
+	    	<Button onPress={()=>navigation.navigate('Add')}>
+          Add
+        </Button>
     	</View>
     </View>
   )
