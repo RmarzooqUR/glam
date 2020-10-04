@@ -13,7 +13,7 @@ import axios from 'axios'
 
 export default function ProductList({navigation}){
 	const [productList, setProductList] = useState();
-
+	const [reRender, setreRender] = useState(false);
 	useEffect(()=>{
 		// https://gorest.co.in/public-api/posts
 		// http://localhost:8000/products/
@@ -23,13 +23,15 @@ export default function ProductList({navigation}){
         )
       )
 			.catch((err)=> alert(err))
-	},[]);
+	},[reRender]);
 
 	
   return (
     <View>
       <View style={styles.content}>
-    		<Button onPress={()=>navigation.navigate('Add')}>
+    		<Button onPress={()=>navigation.navigate('Add', {
+    			setreRender
+    		})}>
           Add a Product
         </Button>
 			</View>
@@ -38,7 +40,7 @@ export default function ProductList({navigation}){
 					style={{flex:0}}
 					contentContainerStyle={{paddingBottom:110}}
         	data={productList}
-        	keyExtractor={(item)=>item.id}
+        	keyExtractor={(item)=>''+item.id}
         	renderItem = {({item})=>(
             <TouchableOpacity style={styles.content}>
           		
@@ -50,7 +52,8 @@ export default function ProductList({navigation}){
 
 								<Card.Actions>
 									<Button onPress={()=>navigation.navigate('Details', {
-										currentItem:item
+										currentItem:item,
+										setreRender
 									})}>
 											Details
 									</Button>

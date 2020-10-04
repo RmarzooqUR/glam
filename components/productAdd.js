@@ -6,16 +6,54 @@ import { Button,
 import axios from 'axios';
 
 
-export default function ProductAdd(){
+export default function ProductAdd({ route, navigation }){
+	
+	const [values, setValues] = useState({
+        "title":'',
+        "description":'',
+        "price":null,
+        "qty":null
+  })
+	
+	const handleChangeText = (event, param) => {
+		let temp = Object.assign(values);
+    temp[param] = event;
+    console.log(temp)
+    setValues((temp)=>temp);
+	}
+
+	const handleFormSubmit = () => {
+    axios.post(
+        'http://192.168.0.104:8000/products/add',
+        {
+            "title":values.title,
+            "description":values.description,
+            "price":values.price,
+            "qty":values.qty,
+        })
+        .then(alert("Item added"))
+        .then(route.params.setreRender((prev)=>!prev))
+        .then(navigation.goBack())
+        .catch((e)=>alert(e))
+	}
+
 	return (
 		<View style={styles.content}>
 			<Title>Add a new Product</Title>
-			<TextInput label="Title"/>
-			<TextInput label="Description" multiline={true}/>
-			<TextInput label="Price"/>
-			<TextInput label="Quantity"/>
+			<TextInput label="Title"
+        onChangeText={(e) => handleChangeText(e, "title")}
+			/>
+			<TextInput label="Description" multiline={true}
+        onChangeText={(e) => handleChangeText(e, "description")}
+			/>
+			<TextInput label="Price"
+        onChangeText={(e) => handleChangeText(e, "price")}
+			/>
+			<TextInput label="Quantity"
+        onChangeText={(e) => handleChangeText(e, "qty")}
+			/>
 			<Button onPress={
-				()=>console.log('added')
+				()=>handleFormSubmit()
 			}>Add</Button>
 		</View>
 	)

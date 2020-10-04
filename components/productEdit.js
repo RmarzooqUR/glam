@@ -1,26 +1,70 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {View, StyleSheet} from 'react-native';
-import { TextInput, Title, Button } from 'react-native-paper'
+import { TextInput, Title, Button } from 'react-native-paper';
+import axios from 'axios';
 
-export default function ProductEdit({ route }){
+
+export default function ProductEdit({ route, navigation }){
+
+    const item = route.params.currentItem;
+
+    const [values, setValues] = useState({
+        "title":item.title,
+        "description":item.description,
+        "price":item.price,
+        "qty":item.qty
+    })
+
+    const handleTextChange = (event, param) =>{
+        let temp = Object.assign(values);
+        temp[param] = event;
+        // setValues((prevValues)=>{
+        //     prevValues[param] = event;
+        //     console.log(prevValues)
+        //     return prevValues;
+        // });
+        setValues((temp)=>temp);
+    }
+
+    const handleFormSubmit = ()=>{
+        axios.put(
+            'http://192.168.0.104:8000/products/'
+            +route.params.currentItem.id
+            +'/edit', {
+                "title":values.title,
+                "description":values.description,
+                "price":values.price,
+                "qty":values.qty,
+            })
+            .then(alert("Item edited"))
+            .then(route.params.setActive(values))
+            .then(route.params.setreRender((prev)=>!prev))
+            .then(navigation.goBack())
+            .catch((e)=>alert(e))
+    };
+
     return (
         <View style={styles.content}>
-			<Title>Add a new Product</Title>
+			<Title>Edit this Product</Title>
             <TextInput label="Title" 
-                defaultValue={route.params.currentItem.title}
+                defaultValue={item.title}
+                onChangeText={(e) => handleTextChange(e, "title")}
             />
 			<TextInput label="Description" multiline={true}
-                defaultValue = {route.params.currentItem.description}
+                defaultValue = {item.description}
+                onChangeText={(e) => handleTextChange(e, "description")}
             />
 			<TextInput label="Price"
-                defaultValue = {''+route.params.currentItem.price}
+                defaultValue = {''+item.price}
+                onChangeText={(e) => handleTextChange(+e, "price")}
             />
 			<TextInput label="Quantity"
-                defaultValue={''+route.params.currentItem.qty}
+                defaultValue={''+item.qty}
+                onChangeText={(e) => handleTextChange(+e, "qty")}
             />
 			<Button onPress={
-                ()=>console.log('added')
-            }>Add</Button>
+                ()=>handleFormSubmit()
+            }>Edit</Button>
 		</View>
     )
 }

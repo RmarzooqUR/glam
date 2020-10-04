@@ -1,24 +1,36 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import { Button,
   Paragraph,
-  Title } from 'react-native-paper'
+  Title } from 'react-native-paper';
+import axios from 'axios';
+
 
 export default function ProductDetails({ route, navigation }){
+  const [active, setActive] = useState(route.params.currentItem);
+  
+  const handleDelete= () =>{
+    axios.delete('http://192.168.0.104:8000/products/'+active.id+'/delete')
+    .then(alert("Item deleted"))
+    .then(route.params.setreRender((prev)=>!prev))
+    .then(navigation.goBack())
+    .catch((e)=>alert(e))
+  }
   return (
     <View style={styles.content}>
-      <Title>{route.params.currentItem.title}</Title>
-      <Paragraph>{route.params.currentItem.description}</Paragraph>
-      <Paragraph>Price: {route.params.currentItem.price}</Paragraph>
-      <Paragraph>Quantity left: {route.params.currentItem.qty}</Paragraph>
+      <Title>{active.title}</Title>
+      <Paragraph>{active.description}</Paragraph>
+      <Paragraph>Price: {active.price}</Paragraph>
+      <Paragraph>Quantity left: {active.qty}</Paragraph>
       <Button onPress={
         ()=>navigation.navigate('Edit', {
-          currentItem:route.params.currentItem
+          ...route.params,
+          setActive
         })}>
       Edit</Button>
       
       <Button onPress={
-        ()=>alert('Item deleted')}>
+        ()=>handleDelete()}>
       Delete</Button>
 
     </View>
