@@ -39,7 +39,7 @@ export default function ProductEdit({ route, navigation }){
             .then(alert("Item edited"))
             .then(route.params.setActive(values))
             .then(route.params.setreRender((prev)=>!prev))
-            .then(navigation.goBack())
+            .then(navigation.navigate('Products'))
             .catch((e)=>alert(e))
     };
 

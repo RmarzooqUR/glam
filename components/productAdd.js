@@ -18,7 +18,6 @@ export default function ProductAdd({ route, navigation }){
 	const handleChangeText = (event, param) => {
 		let temp = Object.assign(values);
     temp[param] = event;
-    console.log(temp)
     setValues((temp)=>temp);
 	}
 
