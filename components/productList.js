@@ -5,7 +5,8 @@ import {View,
   TouchableOpacity } from 'react-native';
 import { Card,
   Title,
-  Button } from 'react-native-paper'
+  Button,
+  Paragraph,} from 'react-native-paper'
 import axios from 'axios'
 
 
@@ -24,31 +25,44 @@ export default function ProductList({navigation}){
 			.catch((err)=> alert(err))
 	},[]);
 
+	
   return (
-    <View style={styles.content}>
-      <View>
+    <View>
+      <View style={styles.content}>
+    		<Button onPress={()=>navigation.navigate('Add')}>
+          Add a Product
+        </Button>
+			</View>
+			<View>
       	<FlatList
+					style={{flex:0}}
+					contentContainerStyle={{paddingBottom:110}}
         	data={productList}
         	keyExtractor={(item)=>item.id}
         	renderItem = {({item})=>(
             <TouchableOpacity style={styles.content}>
-          		<Card>
-                <Card.Content>
-            			<Title>{item.title}</Title>
-            			<Button onPress={()=>navigation.navigate('Details')}>
-                    Details
-            			</Button>
-                </Card.Content>
-        			</Card>
+          		
+							<Card>
+								<Card.Content>
+									<Title>{item.title}</Title>
+									<Paragraph>{item.description}</Paragraph>
+								</Card.Content>
+
+								<Card.Actions>
+									<Button onPress={()=>navigation.navigate('Details', {
+										currentItem:item
+									})}>
+											Details
+									</Button>
+								</Card.Actions>
+							</Card>
+
             </TouchableOpacity>
       		)}
       	/>
+				
     	</View>
-    	<View style={styles.content}>
-	    	<Button onPress={()=>navigation.navigate('Add')}>
-          Add
-        </Button>
-    	</View>
+    	
     </View>
   )
 }
