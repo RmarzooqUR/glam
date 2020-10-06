@@ -28,7 +28,8 @@ export default function ProductEdit({ route, navigation }){
 
     const handleFormSubmit = ()=>{
         axios.put(
-            'http://192.168.0.104:8000/products/'
+            route.params.baseAddr
+            +'/products/'
             +route.params.currentItem.id
             +'/edit', {
                 "title":values.title,

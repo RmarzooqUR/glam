@@ -10,7 +10,7 @@ export default function ProductDetails({ route, navigation }){
   const [active, setActive] = useState(route.params.currentItem);
   
   const handleDelete= () =>{
-    axios.delete('http://192.168.0.104:8000/products/'+active.id+'/delete')
+    axios.delete(`${route.params.baseAddr}/products/${active.id}/delete`)
     .then(alert("Item deleted"))
     .then(route.params.setreRender((prev)=>!prev))
     .then(navigation.goBack())
@@ -25,7 +25,8 @@ export default function ProductDetails({ route, navigation }){
       <Button onPress={
         ()=>navigation.navigate('Edit', {
           ...route.params,
-          setActive
+          setActive,
+          baseAddr:route.params.baseAddr
         })}>
       Edit</Button>
       

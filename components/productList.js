@@ -14,10 +14,10 @@ import axios from 'axios'
 export default function ProductList({navigation}){
 	const [productList, setProductList] = useState();
 	const [reRender, setreRender] = useState(false);
+	const baseAddr = 'http://192.168.0.104:8000';
 	useEffect(()=>{
 		// https://gorest.co.in/public-api/posts
-		// http://localhost:8000/products/
-		axios.get('http://192.168.0.104:8000/products/')
+		axios.get(`${baseAddr}/products/`)
 			.then((jsonData)=>setProductList(
           jsonData.data
         )
@@ -30,7 +30,8 @@ export default function ProductList({navigation}){
     <View>
       <View style={styles.content}>
     		<Button onPress={()=>navigation.navigate('Add', {
-    			setreRender
+    			setreRender,
+    			baseAddr:baseAddr
     		})}>
           Add a Product
         </Button>
@@ -53,6 +54,7 @@ export default function ProductList({navigation}){
 								<Card.Actions>
 									<Button onPress={()=>navigation.navigate('Details', {
 										currentItem:item,
+										baseAddr:baseAddr,
 										setreRender
 									})}>
 											Details

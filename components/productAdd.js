@@ -23,7 +23,7 @@ export default function ProductAdd({ route, navigation }){
 
 	const handleFormSubmit = () => {
     axios.post(
-        'http://192.168.0.104:8000/products/add',
+        `${route.params.baseAddr}/products/add`,
         {
             "title":values.title,
             "description":values.description,
