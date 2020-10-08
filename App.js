@@ -5,15 +5,12 @@ import React, {useState} from 'react';
 import { StyleSheet, Text, View, AppRegistry } from 'react-native';
 import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import { name as appName } from './app.json'
-// import LoginSignup from './components/loginSignup';
-// import Login from './components/login';
-// import Signup from './components/signup';
 import ProductList from './components/productList';
 import ProductDetails from './components/productDetails';
 import ProductEdit from './components/productEdit';
 import ProductAdd from './components/productAdd';
-import Login from './components/login.js'
-
+import Login from './components/login';
+import Signup from './components/signup';
 
 const Stack = createStackNavigator();
 
@@ -41,11 +38,10 @@ export default function App() {
             name='Login'
             component={Login}
           />
-          {/*
           <Stack.Screen
             name='Signup'
             component={Signup}
-          />*/}
+          />
           <Stack.Screen
             name='Products'
             component={ProductList}

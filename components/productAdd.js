@@ -39,6 +39,14 @@ export default function ProductAdd({ route, navigation }){
 
 	return (
 		<View style={styles.content}>
+      <Button onPress={()=>{
+      		axios.post(`${baseAddr}/auth/logout/`)
+      		.then(navigation.navigate('Login'))
+      		.catch((e)=>alert(e))
+				}
+      }>
+        Logout
+      </Button>
 			<Title>Add a new Product</Title>
 			<TextInput label="Title"
         onChangeText={(e) => handleChangeText(e, "title")}

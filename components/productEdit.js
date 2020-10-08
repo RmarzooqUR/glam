@@ -47,6 +47,14 @@ export default function ProductEdit({ route, navigation }){
 
     return (
         <View style={styles.content}>
+            <Button onPress={()=>{
+                    axios.post(`${baseAddr}/auth/logout/`)
+                    .then(navigation.navigate('Login'))
+                    .catch((e)=>alert(e))
+                        }
+            }>
+              Logout
+            </Button>
 			<Title>Edit this Product</Title>
             <TextInput label="Title" 
                 defaultValue={item.title}

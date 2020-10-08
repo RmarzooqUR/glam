@@ -36,6 +36,14 @@ export default function ProductList({navigation}){
   return (
     <View>
       <View style={styles.content}>
+        <Button onPress={()=>{
+        		axios.post(`${baseAddr}/auth/logout/`)
+        		.then(navigation.navigate('Login'))
+        		.catch((e)=>alert(e))
+					}
+        }>
+          Logout
+        </Button>
     		<Button onPress={()=>navigation.navigate('Add', {
     			setreRender,
     			baseAddr:baseAddr
@@ -51,7 +59,7 @@ export default function ProductList({navigation}){
         	keyExtractor={(item)=>''+item.id}
         	renderItem = {({item})=>(
             <TouchableOpacity style={styles.content}>
-          		
+
 							<Card>
 								<Card.Content>
 									<Title>{item.title}</Title>
@@ -72,9 +80,7 @@ export default function ProductList({navigation}){
             </TouchableOpacity>
       		)}
       	/>
-				
     	</View>
-    	
     </View>
   )
 }

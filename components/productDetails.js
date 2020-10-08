@@ -24,6 +24,14 @@ export default function ProductDetails({ route, navigation }){
 
   return (
     <View style={styles.content}>
+      <Button onPress={()=>{
+          axios.post(`${baseAddr}/auth/logout/`)
+          .then(navigation.navigate('Login'))
+          .catch((e)=>alert(e))
+        }
+      }>
+        Logout
+      </Button>
       <Title>{active.title}</Title>
       <Paragraph>{active.description}</Paragraph>
       <Paragraph>Price: {active.price}</Paragraph>

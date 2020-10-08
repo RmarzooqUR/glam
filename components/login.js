@@ -7,6 +7,13 @@ import axios from 'axios';
 
 export default function Login({ navigation }){
 	const [values, setValues] =  useState({})
+	
+
+	const handleChangeText = (event, param) =>{
+		let temp = Object.assign(values);
+		temp[param] = event;
+		setValues((temp)=>temp)
+	}
 
 	const handleFormSubmit = () => {
 		axios.post(
@@ -17,18 +24,18 @@ export default function Login({ navigation }){
 			)
 			.then((resp)=>{
 				if(resp.status != 200){
-					alert(resp)
+					alert(JSON.stringify(resp))
 				}
 				else {
-					navigation.navigate('Products')
+					navigation.push('Products')
 				}
 			})
-			.catch((e)=>alert(e))
+			.catch((e)=>alert(JSON.stringify(e)))
 	}
   return (
-     	<AuthForm pword1='password' setValues={setValues} values={values}>
+     	<AuthForm pword1='password' handleChangeText={handleChangeText}>
      		<Button onPress={ () => handleFormSubmit() }>Login</Button>
-     		{/*<Button onPress={ navigation.navigate('Signup') }>Signup Instead</Button>*/}
+     		<Button onPress={ () => navigation.navigate('Signup') }>Signup Instead</Button>
      	</AuthForm>
   )
 }

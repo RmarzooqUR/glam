@@ -2,22 +2,18 @@ import React from 'react';
 import { TextInput, Button, } from 'react-native-paper';
 import { View } from 'react-native'
 
-export default function AuthForm({ children, pword1, values, setValues }){
+export default function AuthForm(
+	{ children, pword1, handleChangeText }){
 
-	const handleChangeText = (event, param) =>{
-		let temp = Object.assign(values);
-		temp[param] = event;
-		setValues((temp)=>temp)
-	}
 
 	return (
 			<View>
 				<TextInput 
-					label='Username' placeholer='username'
+					label='Username'
 					onChangeText = {(e) => handleChangeText(e, 'username')} 
 				/>
 				<TextInput
-					label='Password' placeholer={pword1}
+					label={pword1}
 					onChangeText = {(e) => handleChangeText(e, pword1)}
 				/>
 				{children}
