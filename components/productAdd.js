@@ -29,6 +29,7 @@ export default function ProductAdd({ route, navigation }){
             "description":values.description,
             "price":values.price,
             "qty":values.qty,
+            withCredentials:true,
         })
         .then(alert("Item added"))
         .then(route.params.setreRender((prev)=>!prev))

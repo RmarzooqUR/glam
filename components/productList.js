@@ -14,15 +14,22 @@ import axios from 'axios'
 export default function ProductList({navigation}){
 	const [productList, setProductList] = useState();
 	const [reRender, setreRender] = useState(false);
-	const baseAddr = 'http://192.168.0.104:8000';
+	const baseAddr = 'http://192.168.0.106:8000';
 	useEffect(()=>{
 		// https://gorest.co.in/public-api/posts
-		axios.get(`${baseAddr}/products/`)
+		axios.get(`${baseAddr}/products/`,{withCredentials:true})
 			.then((jsonData)=>setProductList(
           jsonData.data
         )
       )
-			.catch((err)=> alert(err))
+			.catch((err)=> {
+				if (err.status == 401){
+					navigation.navigate('Login')
+				}
+				else{
+					alert(err)
+				}
+			})
 	},[reRender]);
 
 	

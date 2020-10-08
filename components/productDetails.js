@@ -10,12 +10,18 @@ export default function ProductDetails({ route, navigation }){
   const [active, setActive] = useState(route.params.currentItem);
   
   const handleDelete= () =>{
-    axios.delete(`${route.params.baseAddr}/products/${active.id}/delete`)
+    axios.delete(
+      `${route.params.baseAddr}/products/${active.id}/delete`,
+      {
+        withCredentials:true,
+      })
     .then(alert("Item deleted"))
     .then(route.params.setreRender((prev)=>!prev))
     .then(navigation.goBack())
     .catch((e)=>alert(e))
   }
+
+
   return (
     <View style={styles.content}>
       <Title>{active.title}</Title>

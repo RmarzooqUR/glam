@@ -36,6 +36,7 @@ export default function ProductEdit({ route, navigation }){
                 "description":values.description,
                 "price":values.price,
                 "qty":values.qty,
+                withCredentials:true,
             })
             .then(alert("Item edited"))
             .then(route.params.setActive(values))

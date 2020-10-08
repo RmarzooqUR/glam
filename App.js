@@ -12,7 +12,7 @@ import ProductList from './components/productList';
 import ProductDetails from './components/productDetails';
 import ProductEdit from './components/productEdit';
 import ProductAdd from './components/productAdd';
-
+import Login from './components/login.js'
 
 
 const Stack = createStackNavigator();
@@ -37,14 +37,11 @@ export default function App() {
     <PaperProvider theme={theme}>
       <NavigationContainer>
         <Stack.Navigator>
-          {/*<Stack.Screen
-            name='Login/Signup'
-            component={LoginSignup}
-          />
           <Stack.Screen
             name='Login'
             component={Login}
           />
+          {/*
           <Stack.Screen
             name='Signup'
             component={Signup}
