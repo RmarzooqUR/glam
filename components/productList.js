@@ -54,7 +54,7 @@ export default function ProductList({navigation}){
 			<View>
       	<FlatList
 					style={{flex:0}}
-					contentContainerStyle={{paddingBottom:110}}
+					contentContainerStyle={{paddingBottom:190}}
         	data={productList}
         	keyExtractor={(item)=>''+item.id}
         	renderItem = {({item})=>(
