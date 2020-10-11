@@ -1,14 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import { Button,
   Paragraph,
   Title } from 'react-native-paper';
 import axios from 'axios';
-
+import AuthContxt from './contexts/AuthContext';
 
 export default function ProductDetails({ route, navigation }){
   const [active, setActive] = useState(route.params.currentItem);
-  
+  const currContext = useContext(AuthContxt);
+
   const handleDelete= () =>{
     axios.delete(
       `${route.params.baseAddr}/products/${active.id}/delete`,
@@ -25,7 +26,7 @@ export default function ProductDetails({ route, navigation }){
   return (
     <View style={styles.content}>
       <Button onPress={()=>{
-          axios.post(`${baseAddr}/auth/logout/`)
+          axios.post(`${route.params.baseAddr}/auth/logout/`)
           .then(navigation.navigate('Login'))
           .catch((e)=>alert(e))
         }
@@ -36,17 +37,21 @@ export default function ProductDetails({ route, navigation }){
       <Paragraph>{active.description}</Paragraph>
       <Paragraph>Price: {active.price}</Paragraph>
       <Paragraph>Quantity left: {active.qty}</Paragraph>
-      <Button onPress={
-        ()=>navigation.navigate('Edit', {
-          ...route.params,
-          setActive,
-          baseAddr:route.params.baseAddr
-        })}>
-      Edit</Button>
-      
-      <Button onPress={
-        ()=>handleDelete()}>
-      Delete</Button>
+      {currContext.userdata.user.isAdmin && (
+        <View>
+          <Button onPress={
+                      ()=>navigation.navigate('Edit', {
+                        ...route.params,
+                        setActive,
+                        baseAddr:route.params.baseAddr
+                      })}>
+                    Edit</Button>
+                    
+          <Button onPress={
+            ()=>handleDelete()}>
+          Delete</Button>
+        </View>)
+      }
 
     </View>
   )

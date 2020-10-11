@@ -1,28 +1,41 @@
 import React, { createContext, useState, useEffect } from 'react'
+import AsyncStorage from '@react-native-community/async-storage';
+const AuthContxt = createContext();
 
-const { Provider, Consumer} = createContext();
-
-function AuthContext({ children }){
+function AuthContextProvider({ children }){
 	const [userdata, setUserdata] = useState();
 
 	const setContext = (newdata)=>{
-		setUserdata((prev)=>(newdata))
+		setUserdata(newdata)
 	}
 
-	// const loginUser = (values)=>{};
-	// const registerUser = (values)=>{};
-	// const fetchFromStorage = async () => {};
+  const fetchFromStorage = async ()=>{
+    try{
+      const jsonString = await AsyncStorage.getItem('userdata');
+      return jsonString != null? JSON.parse(jsonString): null;
+    }catch(e){
+      console.log(e)
+    }
+  }
+
+	// const loginUser = (values, navigation)=>{};
+	// const registerUser = (values, navigation)=>{};
+	// const logoutUser = (navigation)=>{};
+
+	// useEffect to set context from AsyncStorage
+
+
 	return (
-			<Provider value={{
+			<AuthContxt.Provider value={{
 					userdata:userdata, 
-					setUserdata: setContext,
+					setUser: setContext,
 					// loginUser:loginUser,
 					// registerUser:registerUser
 				}
 			}>
 				{ children }
-			</Provider>
+			</AuthContxt.Provider>
 		)
 }
-export { AuthContext };
-export default Consumer;
+export { AuthContextProvider };
+export default AuthContxt;

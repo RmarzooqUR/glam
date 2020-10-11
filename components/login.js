@@ -3,12 +3,13 @@ import { View } from 'react-native';
 import { TextInput, Button } from 'react-native-paper';
 import AuthForm from './common/authform';
 import axios from 'axios';
-import Consumer from './contexts/AuthContext';
+import AuthContxt from './contexts/AuthContext';
 
 export default function Login({ navigation }){
 	const [values, setValues] =  useState({})
-	
-	// {loginUser} = useContext(AuthContext)
+	const currContxt = useContext(AuthContxt)
+	//const {loginUser} = useContext(AuthContext)
+
 
 	const handleChangeText = (event, param) =>{
 		let temp = Object.assign(values);
@@ -16,9 +17,10 @@ export default function Login({ navigation }){
 		setValues((temp)=>temp)
 	}
 
+
 	const handleFormSubmit = (ctx) => {
 
-		// ctx.loginUser(values)
+		// currContxt.loginUser(values, navigation)
 
 
 		axios.post(
@@ -33,32 +35,24 @@ export default function Login({ navigation }){
 				}
 				else {
 					// set user data to asyncstorage and to context here
-					// const currContxt = useContext(Contxt)
-					ctx.setUserdata(resp.data)
+					// ctx.setUserdata(resp.data)
+					currContxt.setUser(resp.data)
 					navigation.push('Products')
 				}
 			})
 			.catch((e)=>alert(JSON.stringify(e)))
 	}
 
-	useEffect(()=>{
-		// get data from value of context's consumer and
-		// login with the given value
-		// 		- this component uses values state 
-		// if not found do nothing
-		// or can do it in consumers value callback
-	})
+	// useEffect(()=>{
+			// if context is already set (from AuthContext's useEffect)
+			// navigate to productList (use context and not withCredentials)
+	// })
 
 
   return (
-  	<Consumer>
-  		{(ctx) => {
-  			return (
-		     	<AuthForm pword1='password' handleChangeText={handleChangeText}>
-		     		<Button onPress={ () => handleFormSubmit(ctx) }>Login</Button>
-		     		<Button onPress={ () => navigation.navigate('Signup') }>Signup Instead</Button>
-		     	</AuthForm>);
-  			}}
-   	</Consumer>
-  );
+	 	<AuthForm pword1='password' handleChangeText={handleChangeText}>
+	 		<Button onPress={ () => handleFormSubmit() }>Login</Button>
+	 		<Button onPress={ () => navigation.navigate('Signup') }>Signup Instead</Button>
+   	</AuthForm>
+ 	);	
 }

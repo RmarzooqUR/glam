@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import {View,
   FlatList, 
   StyleSheet,
@@ -6,14 +6,16 @@ import {View,
 import { Card,
   Title,
   Button,
-  Paragraph,} from 'react-native-paper'
-import axios from 'axios'
-
+  Paragraph,} from 'react-native-paper';
+import axios from 'axios';
+import AuthContxt from './contexts/AuthContext';
 
 
 export default function ProductList({navigation}){
 	const [productList, setProductList] = useState();
 	const [reRender, setreRender] = useState(false);
+	const currContext = useContext(AuthContxt)
+
 	const baseAddr = 'http://192.168.0.106:8000';
 	useEffect(()=>{
 		// https://gorest.co.in/public-api/posts
@@ -44,12 +46,14 @@ export default function ProductList({navigation}){
         }>
           Logout
         </Button>
-    		<Button onPress={()=>navigation.navigate('Add', {
-    			setreRender,
-    			baseAddr:baseAddr
-    		})}>
-          Add a Product
-        </Button>
+    		{ currContext.userdata.user.isAdmin && (
+					<Button onPress={()=>navigation.navigate('Add', {
+		    			setreRender,
+		    			baseAddr:baseAddr
+		    		})}>
+		          Add a Product
+	        </Button>)
+	      }
 			</View>
 			<View>
       	<FlatList

@@ -11,8 +11,7 @@ import ProductEdit from './components/productEdit';
 import ProductAdd from './components/productAdd';
 import Login from './components/login';
 import Signup from './components/signup';
-import { AuthContext } from './components/contexts/AuthContext';
-import AsyncStorage from '@react-native-community/async-storage';
+import { AuthContextProvider } from './components/contexts/AuthContext';
 
 
 const Stack = createStackNavigator();
@@ -33,17 +32,6 @@ const theme = {
 export default function App() {
   // const [userdata, setUserdata] = useState();
 
-  // useEffect(()=>{
-  //   // fetch from localstorage if available and set to userdata
-  // })
-  const fetchFromStorage = async ()=>{
-    try{
-      const jsonString = await AsyncStorage.getItem('data');
-      return jsonString != null? JSON.parse(jsonString): null;
-    }catch(e){
-      console.log(e)
-    }
-  }
 
   // =============probably need to use useContext========
   // useEffect(()=>{
@@ -57,7 +45,7 @@ export default function App() {
   // })
 
   return (
-    <AuthContext>
+    <AuthContextProvider>
       <PaperProvider theme={theme}>
         <NavigationContainer>
           <Stack.Navigator>
@@ -90,7 +78,7 @@ export default function App() {
           </Stack.Navigator>
         </NavigationContainer>
       </PaperProvider>
-    </AuthContext>
+    </AuthContextProvider>
   );
 }
 
