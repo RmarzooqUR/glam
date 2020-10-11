@@ -7,6 +7,8 @@ import axios from 'axios';
 export default function Signup({ navigation }){
 	const [values, setValues] =  useState({})
 
+	// {registerUser} = useContext(AuthContext)
+
 	const handleChangeText = (event, param) =>{
 		let temp = Object.assign(values);
 		temp[param] = event;

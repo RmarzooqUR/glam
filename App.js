@@ -11,7 +11,7 @@ import ProductEdit from './components/productEdit';
 import ProductAdd from './components/productAdd';
 import Login from './components/login';
 import Signup from './components/signup';
-import { GlobalContext } from './components/contexts/globalcontext';
+import { AuthContext } from './components/contexts/AuthContext';
 import AsyncStorage from '@react-native-community/async-storage';
 
 
@@ -57,7 +57,7 @@ export default function App() {
   // })
 
   return (
-    <GlobalContext>
+    <AuthContext>
       <PaperProvider theme={theme}>
         <NavigationContainer>
           <Stack.Navigator>
@@ -90,7 +90,7 @@ export default function App() {
           </Stack.Navigator>
         </NavigationContainer>
       </PaperProvider>
-    </GlobalContext>
+    </AuthContext>
   );
 }
 

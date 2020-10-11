@@ -3,11 +3,13 @@ import { View } from 'react-native';
 import { TextInput, Button } from 'react-native-paper';
 import AuthForm from './common/authform';
 import axios from 'axios';
-import Consumer from './contexts/globalcontext';
+import Consumer from './contexts/AuthContext';
 
 export default function Login({ navigation }){
 	const [values, setValues] =  useState({})
 	
+	// {loginUser} = useContext(AuthContext)
+
 	const handleChangeText = (event, param) =>{
 		let temp = Object.assign(values);
 		temp[param] = event;
@@ -15,6 +17,10 @@ export default function Login({ navigation }){
 	}
 
 	const handleFormSubmit = (ctx) => {
+
+		// ctx.loginUser(values)
+
+
 		axios.post(
 				'http://192.168.0.106:8000/auth/login/',
 				{
