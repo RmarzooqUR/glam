@@ -5,37 +5,39 @@ const AuthContxt = createContext();
 function AuthContextProvider({ children }){
 	const [userdata, setUserdata] = useState();
 
-	const setContextAndStorage = async (newdata)=>{
+	const setContextAndStorage = async (newdata) =>{
 		setUserdata(newdata);
 		try{
 			const jsonString = JSON.stringify(newdata);
-			await AsyncStorage.setItem('userdata', newdata)
-		}
-		catch(e){
+			await AsyncStorage.setItem('userdata', jsonString);
+		}catch(e){
 			console.log(e)
 		}
 	}
 
-  const fetchFromStorage = async ()=>{
-    try{
-      const jsonString = await AsyncStorage.getItem('userdata');
-      return jsonString != null? JSON.parse(jsonString): null;
-    }catch(e){
-      console.log(e)
-    }
-  }
 
 	// const loginUser = (values, navigation)=>{};
 	// const registerUser = (values, navigation)=>{};
 	// const logoutUser = (navigation)=>{};
 
+
+
 	// useEffect to set context from AsyncStorage
 	useEffect(()=>{
-		const dataFromStorage = fetchFromStorage()
-		if(dataFromStorage){
-			setContext(dataFromStorage);
-		}
-	});
+		const fetchFromStorage = async () =>{
+			let jsonString = null;
+			try{
+	      jsonString = await AsyncStorage.getItem('userdata');
+    	}catch(e){
+      	console.log(e);
+    	}
+    	jsonString != null? setUserdata(JSON.parse(jsonString)):setUserdata(null)
+		};
+
+		fetchFromStorage();
+	},[]);
+
+
 
 	return (
 			<AuthContxt.Provider value={{
@@ -49,5 +51,7 @@ function AuthContextProvider({ children }){
 			</AuthContxt.Provider>
 		)
 }
+
+
 export { AuthContextProvider };
 export default AuthContxt;

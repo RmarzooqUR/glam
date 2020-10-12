@@ -42,10 +42,17 @@ export default function Login({ navigation }){
 			.catch((e)=>alert(JSON.stringify(e)))
 	}
 
-	// useEffect(()=>{
-			// if context is already set (from AuthContext's useEffect)
-			// navigate to productList (use context and not withCredentials)
-	// })
+	useEffect(()=>{
+		// if context is already set (from AuthContext's useEffect)
+		// navigate to productList (use context and not withCredentials)
+		const promise = new Promise((resolve, reject)=>{
+			currContxt.userdata !=null ?resolve(currContxt.userdata):reject('Login Manually')
+		})
+		.then(
+			result=>navigation.navigate('Login'),
+			err=>alert(err)
+			)
+	},[])
 
 
   return (
