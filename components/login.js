@@ -18,7 +18,7 @@ export default function Login({ navigation }){
 	}
 
 
-	const handleFormSubmit = (ctx) => {
+	const handleFormSubmit = () => {
 
 		// currContxt.loginUser(values, navigation)
 
@@ -35,7 +35,6 @@ export default function Login({ navigation }){
 				}
 				else {
 					// set user data to asyncstorage and to context here
-					// ctx.setUserdata(resp.data)
 					currContxt.setUser(resp.data)
 					navigation.push('Products')
 				}

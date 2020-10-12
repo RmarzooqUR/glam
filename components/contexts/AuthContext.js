@@ -5,8 +5,15 @@ const AuthContxt = createContext();
 function AuthContextProvider({ children }){
 	const [userdata, setUserdata] = useState();
 
-	const setContext = (newdata)=>{
-		setUserdata(newdata)
+	const setContextAndStorage = async (newdata)=>{
+		setUserdata(newdata);
+		try{
+			const jsonString = JSON.stringify(newdata);
+			await AsyncStorage.setItem('userdata', newdata)
+		}
+		catch(e){
+			console.log(e)
+		}
 	}
 
   const fetchFromStorage = async ()=>{
@@ -23,12 +30,17 @@ function AuthContextProvider({ children }){
 	// const logoutUser = (navigation)=>{};
 
 	// useEffect to set context from AsyncStorage
-
+	useEffect(()=>{
+		const dataFromStorage = fetchFromStorage()
+		if(dataFromStorage){
+			setContext(dataFromStorage);
+		}
+	});
 
 	return (
 			<AuthContxt.Provider value={{
 					userdata:userdata, 
-					setUser: setContext,
+					setUser: setContextAndStorage,
 					// loginUser:loginUser,
 					// registerUser:registerUser
 				}
