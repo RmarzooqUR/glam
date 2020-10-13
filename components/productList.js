@@ -17,36 +17,36 @@ export default function ProductList({navigation}){
 	const currContext = useContext(AuthContxt)
 
 	const baseAddr = 'http://192.168.0.106:8000';
+
+
 	useEffect(()=>{
 		// https://gorest.co.in/public-api/posts
-		axios.get(`${baseAddr}/products/`,{withCredentials:true})
+		axios.get(`${baseAddr}/products/`,{headers:{
+			'Cookie':`Token ${currContext.userdata.access_token}`
+		}})
 			.then((jsonData)=>setProductList(
           jsonData.data
-        )
+        ),
+				(err)=>{err.status == 401?navigation.navigate('Login'):alert(err)}
       )
-			.catch((err)=> {
-				if (err.status == 401){
-					navigation.navigate('Login')
-				}
-				else{
-					alert(err)
-				}
-			})
 	},[reRender]);
 
-	
+
   return (
     <View>
       <View style={styles.content}>
+
         <Button onPress={()=>{
         		axios.post(`${baseAddr}/auth/logout/`)
+        		.then(currContext.setUser(null))
         		.then(navigation.navigate('Login'))
         		.catch((e)=>alert(e))
 					}
         }>
           Logout
         </Button>
-    		{ currContext.userdata.user.isAdmin && (
+
+    		{ currContext.userdata && currContext.userdata.user.isAdmin && (
 					<Button onPress={()=>navigation.navigate('Add', {
 		    			setreRender,
 		    			baseAddr:baseAddr
@@ -55,6 +55,8 @@ export default function ProductList({navigation}){
 	        </Button>)
 	      }
 			</View>
+
+
 			<View>
       	<FlatList
 					style={{flex:0}}
@@ -63,13 +65,11 @@ export default function ProductList({navigation}){
         	keyExtractor={(item)=>''+item.id}
         	renderItem = {({item})=>(
             <TouchableOpacity style={styles.content}>
-
 							<Card>
 								<Card.Content>
 									<Title>{item.title}</Title>
 									<Paragraph>{item.description}</Paragraph>
 								</Card.Content>
-
 								<Card.Actions>
 									<Button onPress={()=>navigation.navigate('Details', {
 										currentItem:item,
@@ -80,11 +80,11 @@ export default function ProductList({navigation}){
 									</Button>
 								</Card.Actions>
 							</Card>
-
             </TouchableOpacity>
       		)}
       	/>
     	</View>
+
     </View>
   )
 }

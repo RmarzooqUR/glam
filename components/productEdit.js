@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import {View, StyleSheet} from 'react-native';
 import { TextInput, Title, Button } from 'react-native-paper';
 import axios from 'axios';
+import AuthContxt from './contexts/AuthContext';
 
 
 export default function ProductEdit({ route, navigation }){
-
+    const currContext = useContext(AuthContxt);
     const item = route.params.currentItem;
 
     const [values, setValues] = useState({
@@ -18,11 +19,6 @@ export default function ProductEdit({ route, navigation }){
     const handleTextChange = (event, param) =>{
         let temp = Object.assign(values);
         temp[param] = event;
-        // setValues((prevValues)=>{
-        //     prevValues[param] = event;
-        //     console.log(prevValues)
-        //     return prevValues;
-        // });
         setValues((temp)=>temp);
     }
 
@@ -36,12 +32,14 @@ export default function ProductEdit({ route, navigation }){
                 "description":values.description,
                 "price":values.price,
                 "qty":values.qty,
-                withCredentials:true,
+                headers:{
+                    'Cookie':`Token ${currContext.userdata.access_token}`
+                }
             })
             .then(alert("Item edited"))
             .then(route.params.setActive(values))
-            .then(route.params.setreRender((prev)=>!prev))
             .then(navigation.navigate('Products'))
+            .then(route.params.setreRender((prev)=>!prev))
             .catch((e)=>alert(e))
     };
 
@@ -49,6 +47,7 @@ export default function ProductEdit({ route, navigation }){
         <View style={styles.content}>
             <Button onPress={()=>{
                     axios.post(`${baseAddr}/auth/logout/`)
+                    .then(currContext.setUser(null))
                     .then(navigation.navigate('Login'))
                     .catch((e)=>alert(e))
                         }

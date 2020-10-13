@@ -14,11 +14,13 @@ export default function ProductDetails({ route, navigation }){
     axios.delete(
       `${route.params.baseAddr}/products/${active.id}/delete`,
       {
-        withCredentials:true,
+        headers:{
+          'Cookie':`Token ${currContext.userdata.access_token}`
+        }
       })
     .then(alert("Item deleted"))
-    .then(route.params.setreRender((prev)=>!prev))
     .then(navigation.goBack())
+    .then(route.params.setreRender((prev)=>!prev))
     .catch((e)=>alert(e))
   }
 
@@ -27,6 +29,7 @@ export default function ProductDetails({ route, navigation }){
     <View style={styles.content}>
       <Button onPress={()=>{
           axios.post(`${route.params.baseAddr}/auth/logout/`)
+          .then(currContext.setUser(null))
           .then(navigation.navigate('Login'))
           .catch((e)=>alert(e))
         }
@@ -37,7 +40,7 @@ export default function ProductDetails({ route, navigation }){
       <Paragraph>{active.description}</Paragraph>
       <Paragraph>Price: {active.price}</Paragraph>
       <Paragraph>Quantity left: {active.qty}</Paragraph>
-      {currContext.userdata.user.isAdmin && (
+      { currContext.userdata && currContext.userdata.user.isAdmin && (
         <View>
           <Button onPress={
                       ()=>navigation.navigate('Edit', {

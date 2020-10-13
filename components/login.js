@@ -49,10 +49,10 @@ export default function Login({ navigation }){
 			currContxt.userdata !=null ?resolve(currContxt.userdata):reject('Login Manually')
 		})
 		.then(
-			result=>navigation.navigate('Login'),
-			err=>alert(err)
+			result=>navigation.navigate('Products'),
+			err=>console.log(err)
 			)
-	},[])
+	},[currContxt.userdata])
 
 
   return (

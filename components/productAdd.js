@@ -1,13 +1,14 @@
-import React , {useState, useEffect} from 'react';
+import React , {useState, useEffect, useContext } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Button, 
 	Title,
 	TextInput, } from 'react-native-paper';
 import axios from 'axios';
+import AuthContxt from './contexts/AuthContext';
 
 
 export default function ProductAdd({ route, navigation }){
-	
+  const currContext = useContext(AuthContxt);
 	const [values, setValues] = useState({
         "title":'',
         "description":'',
@@ -29,18 +30,21 @@ export default function ProductAdd({ route, navigation }){
             "description":values.description,
             "price":values.price,
             "qty":values.qty,
-            withCredentials:true,
+            headers:{
+              'Cookie':`Token ${currContext.userdata.access_token}`
+            }
         })
         .then(alert("Item added"))
-        .then(route.params.setreRender((prev)=>!prev))
         .then(navigation.goBack())
+        .then(route.params.setreRender((prev)=>!prev))
         .catch((e)=>alert(e))
 	}
 
 	return (
 		<View style={styles.content}>
       <Button onPress={()=>{
-      		axios.post(`${baseAddr}/auth/logout/`)
+      		axios.post(`${route.params.baseAddr}/auth/logout/`)
+          .then(currContext.setUser(null))
       		.then(navigation.navigate('Login'))
       		.catch((e)=>alert(e))
 				}
