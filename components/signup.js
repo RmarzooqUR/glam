@@ -37,8 +37,8 @@ export default function Signup({ navigation }){
 
   return (
   	<AuthForm pword1 = 'password1' handleChangeText={handleChangeText}>
-  		<TextInput label='password2' onChangeText={(e)=>handleChangeText(e,'password2')} />
-  		<TextInput label='email' onChangeText={(e)=>handleChangeText(e,'email')} />
+  		<TextInput label='Re-enter Password' onChangeText={(e)=>handleChangeText(e,'password2')} />
+  		<TextInput label='Email' onChangeText={(e)=>handleChangeText(e,'email')} />
   		<Button onPress={()=>handleFormSubmit()}>Signup</Button>
   		<Button onPress={()=>navigation.navigate('Login')}>Login instead</Button>
   	</AuthForm>

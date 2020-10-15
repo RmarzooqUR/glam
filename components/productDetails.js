@@ -30,7 +30,6 @@ export default function ProductDetails({ route, navigation }){
       <Button onPress={()=>{
           axios.post(`${route.params.baseAddr}/auth/logout/`)
           .then(currContext.setUser(null))
-          .then(navigation.navigate('Login'))
           .catch((e)=>alert(e))
         }
       }>

@@ -13,7 +13,7 @@ export default function AuthForm(
 					onChangeText = {(e) => handleChangeText(e, 'username')} 
 				/>
 				<TextInput
-					label={pword1}
+					label='Password'
 					onChangeText = {(e) => handleChangeText(e, pword1)}
 				/>
 				{children}

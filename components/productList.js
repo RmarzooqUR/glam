@@ -39,7 +39,6 @@ export default function ProductList({navigation}){
         <Button onPress={()=>{
         		axios.post(`${baseAddr}/auth/logout/`)
         		.then(currContext.setUser(null))
-        		.then(navigation.navigate('Login'))
         		.catch((e)=>alert(e))
 					}
         }>

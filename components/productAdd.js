@@ -26,10 +26,7 @@ export default function ProductAdd({ route, navigation }){
     axios.post(
         `${route.params.baseAddr}/products/add`,
         {
-            "title":values.title,
-            "description":values.description,
-            "price":values.price,
-            "qty":values.qty,
+            ...values,
             headers:{
               'Cookie':`Token ${currContext.userdata.access_token}`
             }
@@ -45,7 +42,6 @@ export default function ProductAdd({ route, navigation }){
       <Button onPress={()=>{
       		axios.post(`${route.params.baseAddr}/auth/logout/`)
           .then(currContext.setUser(null))
-      		.then(navigation.navigate('Login'))
       		.catch((e)=>alert(e))
 				}
       }>

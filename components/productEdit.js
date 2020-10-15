@@ -28,10 +28,7 @@ export default function ProductEdit({ route, navigation }){
             +'/products/'
             +route.params.currentItem.id
             +'/edit', {
-                "title":values.title,
-                "description":values.description,
-                "price":values.price,
-                "qty":values.qty,
+                ...values,
                 headers:{
                     'Cookie':`Token ${currContext.userdata.access_token}`
                 }
@@ -46,9 +43,8 @@ export default function ProductEdit({ route, navigation }){
     return (
         <View style={styles.content}>
             <Button onPress={()=>{
-                    axios.post(`${baseAddr}/auth/logout/`)
+                    axios.post(`${route.params.baseAddr}/auth/logout/`)
                     .then(currContext.setUser(null))
-                    .then(navigation.navigate('Login'))
                     .catch((e)=>alert(e))
                         }
             }>
