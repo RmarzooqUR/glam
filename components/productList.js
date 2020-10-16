@@ -35,20 +35,12 @@ export default function ProductList({navigation}){
     <View>
       <View style={styles.content}>
 
-        <Button onPress={()=>{
-        		apiClient.post('/auth/logout/')
-        		.then(currContext.setUser(null))
-        		.catch((e)=>alert(e))
-					}
-        }>
-          Logout
-        </Button>
-
     		{ currContext.userdata && currContext.userdata.user.isAdmin && (
-					<Button onPress={()=>navigation.navigate('Add', {
-		    			setreRender,
-		    		})}>
-		          Add a Product
+					<Button 
+						onPress={()=>navigation.navigate('Add', {
+	    			setreRender,
+	    		})}>
+	          Add a Product
 	        </Button>)
 	      }
 			</View>
@@ -57,7 +49,7 @@ export default function ProductList({navigation}){
 			<View>
       	<FlatList
 					style={{flex:0}}
-					contentContainerStyle={{paddingBottom:190}}
+					contentContainerStyle={{paddingBottom:115}}
         	data={productList}
         	keyExtractor={(item)=>''+item.id}
         	renderItem = {({item})=>(
@@ -68,9 +60,10 @@ export default function ProductList({navigation}){
 									<Paragraph>{item.description}</Paragraph>
 								</Card.Content>
 								<Card.Actions>
-									<Button onPress={()=>navigation.navigate('Details', {
-										currentItem:item,
-										setreRender
+									<Button
+										onPress={()=>navigation.navigate('Details', {
+											currentItem:item,
+											setreRender
 									})}>
 											Details
 									</Button>

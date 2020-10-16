@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import {View, StyleSheet} from 'react-native';
 import { TextInput, Title, Button } from 'react-native-paper';
 import {apiClient} from './apiClient';
@@ -38,14 +38,6 @@ export default function ProductEdit({ route, navigation }){
 
     return (
         <View style={styles.content}>
-            <Button onPress={()=>{
-                    apiClient.post('/auth/logout/')
-                    .then(currContext.setUser(null))
-                    .catch((e)=>alert(e))
-                        }
-            }>
-              Logout
-            </Button>
 			<Title>Edit this Product</Title>
             <TextInput label="Title" 
                 defaultValue={item.title}

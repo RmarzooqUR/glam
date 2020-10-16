@@ -22,14 +22,14 @@ function AuthContextProvider({ children }){
 		apiClient.post('/auth/login/',{...values})
 			.then((resp)=>{
 				if(resp.status != 200){
-					alert(JSON.stringify(resp))
+					alert(resp)
 				}
 				else {
 					// set user data to asyncstorage and to context here
 					setContextAndStorage(resp.data)
 				}
 			})
-			.catch((e)=>alert(JSON.stringify(e)))
+			.catch((e)=>alert(e));
 		};
 
 
@@ -37,14 +37,14 @@ function AuthContextProvider({ children }){
 		apiClient.post('/auth/register/',{...values})
 			.then((resp)=>{
 				if(resp.status != 201){
-					alert(JSON.stringify(resp))
+					alert(resp)
 				}
 				else {
 					alert('You can now login')
 					navigation.navigate('Login')
 				}
 			})
-			.catch((e)=>alert(JSON.stringify(e)))};
+			.catch((e)=>alert(e))};
 
 
 

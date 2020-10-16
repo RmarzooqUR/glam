@@ -24,14 +24,6 @@ export default function ProductDetails({ route, navigation }){
 
   return (
     <View style={styles.content}>
-      <Button onPress={()=>{
-          apiClient.post('/auth/logout/')
-          .then(currContext.setUser(null))
-          .catch((e)=>alert(e))
-        }
-      }>
-        Logout
-      </Button>
       <Title>{active.title}</Title>
       <Paragraph>{active.description}</Paragraph>
       <Paragraph>Price: {active.price}</Paragraph>

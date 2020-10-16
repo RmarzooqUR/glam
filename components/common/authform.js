@@ -1,5 +1,5 @@
 import React from 'react';
-import { TextInput, Button, } from 'react-native-paper';
+import { TextInput } from 'react-native-paper';
 import { KeyboardAvoidingView, StyleSheet } from 'react-native'
 
 export default function AuthForm(

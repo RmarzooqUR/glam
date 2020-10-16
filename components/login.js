@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext }  from 'react';
-import { View, Pressable, Text, StyleSheet } from 'react-native';
-import { TextInput, Button } from 'react-native-paper';
+import { Pressable, StyleSheet } from 'react-native';
+import { Text, TextInput, Button } from 'react-native-paper';
 import AuthForm from './common/authform';
 import AuthContxt from './contexts/AuthContext';
 

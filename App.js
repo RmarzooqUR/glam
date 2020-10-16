@@ -2,9 +2,7 @@ import 'react-native-gesture-handler';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import React, { useContext } from 'react';
-import { StyleSheet, Text, View, Image } from 'react-native';
-import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
-import { name as appName } from './app.json'
+import { DefaultTheme, Provider as PaperProvider, Button } from 'react-native-paper';
 import ProductList from './components/productList';
 import ProductDetails from './components/productDetails';
 import ProductEdit from './components/productEdit';
@@ -12,7 +10,7 @@ import ProductAdd from './components/productAdd';
 import Login from './components/login';
 import Signup from './components/signup';
 import AuthContxt, { AuthContextProvider } from './components/contexts/AuthContext';
-
+import { apiClient } from './components/apiClient'
 
 
 const theme = {
@@ -38,7 +36,19 @@ export default function App() {
   );
 }
 
-
+function LogoutBtn({navigation}){
+	const currContext = useContext(AuthContxt);
+	return(
+	  <Button onPress={()=>{
+	  		apiClient.post('/auth/logout/')
+	  		.then(currContext.setUser(null))
+	  		.catch((e)=>alert(e))
+			}
+	  }>
+	    Logout
+	  </Button>
+	)
+}
 
 
 function AppContent(){
@@ -52,20 +62,32 @@ function AppContent(){
           		<Stack.Screen
 		            name='Products'
 		            component={ProductList}
+		            options={{
+		            	headerRight:(navigation)=> <LogoutBtn navigation={navigation} />
+		            }}
 		          />
 		          <Stack.Screen
 		            // should have conditional rendering
 		            // buttons for editing of product
 		            name='Details'
 		            component={ProductDetails}
+		            options={{
+		            	headerRight:(navigation)=> <LogoutBtn navigation={navigation} />
+		            }}
 		          />
 		          <Stack.Screen
 		            name='Edit'
 		            component={ProductEdit}
+		            options={{
+		            	headerRight:(navigation)=> <LogoutBtn navigation={navigation} />
+		            }}
 		          />
 		          <Stack.Screen
 		            name='Add'
 		            component={ProductAdd} 
+		            options={{
+		            	headerRight:(navigation)=> <LogoutBtn navigation={navigation} />
+		            }}
 		          />
 	          </>
         	):(

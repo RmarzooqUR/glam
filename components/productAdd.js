@@ -1,4 +1,4 @@
-import React , {useState, useEffect, useContext } from 'react';
+import React , {useState, useContext } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Button, 
 	Title,
@@ -36,14 +36,6 @@ export default function ProductAdd({ route, navigation }){
 
 	return (
 		<View style={styles.content}>
-      <Button onPress={()=>{
-      		apiClient.post('/auth/logout/')
-          .then(currContext.setUser(null))
-      		.catch((e)=>alert(e))
-				}
-      }>
-        Logout
-      </Button>
 			<Title>Add a new Product</Title>
 			<TextInput label="Title"
         onChangeText={(e) => handleChangeText(e, "title")}
