@@ -2,7 +2,7 @@ import 'react-native-gesture-handler';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import React, { useContext } from 'react';
-import { StyleSheet, Text, View, AppRegistry } from 'react-native';
+import { StyleSheet, Text, View, Image } from 'react-native';
 import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import { name as appName } from './app.json'
 import ProductList from './components/productList';
@@ -37,6 +37,7 @@ export default function App() {
     </AuthContextProvider>
   );
 }
+
 
 
 
@@ -83,13 +84,3 @@ function AppContent(){
       </NavigationContainer>
 		)
 }
-
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
