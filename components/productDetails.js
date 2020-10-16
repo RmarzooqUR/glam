@@ -3,7 +3,7 @@ import {View, Text, StyleSheet} from 'react-native';
 import { Button,
   Paragraph,
   Title } from 'react-native-paper';
-import axios from 'axios';
+import {apiClient} from './apiClient';
 import AuthContxt from './contexts/AuthContext';
 
 export default function ProductDetails({ route, navigation }){
@@ -11,24 +11,21 @@ export default function ProductDetails({ route, navigation }){
   const currContext = useContext(AuthContxt);
 
   const handleDelete= () =>{
-    axios.delete(
-      `${route.params.baseAddr}/products/${active.id}/delete`,
-      {
+    apiClient.delete(`/products/${active.id}/delete`,{
         headers:{
           'Cookie':`Token ${currContext.userdata.access_token}`
-        }
-      })
+        }})
     .then(alert("Item deleted"))
     .then(navigation.goBack())
     .then(route.params.setreRender((prev)=>!prev))
-    .catch((e)=>alert(e))
+    .catch((e)=>{err.status == 401?currContext.setUser(null):alert(err)})
   }
 
 
   return (
     <View style={styles.content}>
       <Button onPress={()=>{
-          axios.post(`${route.params.baseAddr}/auth/logout/`)
+          apiClient.post('/auth/logout/')
           .then(currContext.setUser(null))
           .catch((e)=>alert(e))
         }
@@ -45,7 +42,6 @@ export default function ProductDetails({ route, navigation }){
                       ()=>navigation.navigate('Edit', {
                         ...route.params,
                         setActive,
-                        baseAddr:route.params.baseAddr
                       })}>
                     Edit</Button>
                     

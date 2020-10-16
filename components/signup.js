@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { View } from 'react-native';
 import { TextInput, Button } from 'react-native-paper';
 import AuthForm from './common/authform';
-import axios from 'axios';
+import AuthContxt from './contexts/AuthContext';
+
 
 export default function Signup({ navigation }){
 	const [values, setValues] =  useState({})
-
-	// {registerUser} = useContext(AuthContext)
+	const {signupUser} = useContext(AuthContxt)
 
 	const handleChangeText = (event, param) =>{
 		let temp = Object.assign(values);
@@ -16,23 +16,7 @@ export default function Signup({ navigation }){
 	}
 
 	const handleFormSubmit = () => {
-		// registerUser(values, navigation)
-		axios.post(
-				'http://192.168.0.106:8000/auth/register/',
-				{
-					...values
-				}
-			)
-			.then((resp)=>{
-				if(resp.status != 201){
-					alert(JSON.stringify(resp))
-				}
-				else {
-					alert('You can now login')
-					navigation.navigate('Login')
-				}
-			})
-			.catch((e)=>alert(JSON.stringify(e)))
+		signupUser(values, navigation)
 	}
 
   return (

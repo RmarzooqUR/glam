@@ -1,5 +1,7 @@
 import React, { createContext, useState, useEffect } from 'react'
 import AsyncStorage from '@react-native-community/async-storage';
+import { apiClient } from '../apiClient';
+
 const AuthContxt = createContext();
 
 function AuthContextProvider({ children }){
@@ -16,9 +18,33 @@ function AuthContextProvider({ children }){
 	}
 
 
-	// const loginUser = (values, navigation)=>{};
-	// const registerUser = (values, navigation)=>{};
-	// const logoutUser = (navigation)=>{};
+	const loginUser = (values)=>{
+		apiClient.post('/auth/login/',{...values})
+			.then((resp)=>{
+				if(resp.status != 200){
+					alert(JSON.stringify(resp))
+				}
+				else {
+					// set user data to asyncstorage and to context here
+					setContextAndStorage(resp.data)
+				}
+			})
+			.catch((e)=>alert(JSON.stringify(e)))
+		};
+
+
+	const signupUser = (values,navigation)=>{
+		apiClient.post('/auth/register/',{...values})
+			.then((resp)=>{
+				if(resp.status != 201){
+					alert(JSON.stringify(resp))
+				}
+				else {
+					alert('You can now login')
+					navigation.navigate('Login')
+				}
+			})
+			.catch((e)=>alert(JSON.stringify(e)))};
 
 
 
@@ -43,8 +69,8 @@ function AuthContextProvider({ children }){
 			<AuthContxt.Provider value={{
 					userdata:userdata, 
 					setUser: setContextAndStorage,
-					// loginUser:loginUser,
-					// registerUser:registerUser
+					loginUser:loginUser,
+					signupUser:signupUser,
 				}
 			}>
 				{ children }

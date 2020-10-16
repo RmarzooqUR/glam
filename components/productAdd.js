@@ -3,7 +3,7 @@ import { View, StyleSheet } from 'react-native';
 import { Button, 
 	Title,
 	TextInput, } from 'react-native-paper';
-import axios from 'axios';
+import {apiClient} from './apiClient';
 import AuthContxt from './contexts/AuthContext';
 
 
@@ -23,10 +23,7 @@ export default function ProductAdd({ route, navigation }){
 	}
 
 	const handleFormSubmit = () => {
-    axios.post(
-        `${route.params.baseAddr}/products/add`,
-        {
-            ...values,
+    apiClient.post('/products/add',{...values,
             headers:{
               'Cookie':`Token ${currContext.userdata.access_token}`
             }
@@ -34,13 +31,13 @@ export default function ProductAdd({ route, navigation }){
         .then(alert("Item added"))
         .then(navigation.goBack())
         .then(route.params.setreRender((prev)=>!prev))
-        .catch((e)=>alert(e))
+        .catch((e)=>{err.status == 401?currContext.setUser(null):alert(err)})
 	}
 
 	return (
 		<View style={styles.content}>
       <Button onPress={()=>{
-      		axios.post(`${route.params.baseAddr}/auth/logout/`)
+      		apiClient.post('/auth/logout/')
           .then(currContext.setUser(null))
       		.catch((e)=>alert(e))
 				}

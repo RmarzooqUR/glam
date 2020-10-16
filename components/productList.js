@@ -7,7 +7,7 @@ import { Card,
   Title,
   Button,
   Paragraph,} from 'react-native-paper';
-import axios from 'axios';
+import {apiClient} from './apiClient';
 import AuthContxt from './contexts/AuthContext';
 
 
@@ -16,18 +16,17 @@ export default function ProductList({navigation}){
 	const [reRender, setreRender] = useState(false);
 	const currContext = useContext(AuthContxt)
 
-	const baseAddr = 'http://192.168.0.106:8000';
 
 
 	useEffect(()=>{
 		// https://gorest.co.in/public-api/posts
-		axios.get(`${baseAddr}/products/`,{headers:{
+		apiClient.get('/products/',{headers:{
 			'Cookie':`Token ${currContext.userdata.access_token}`
 		}})
 			.then((jsonData)=>setProductList(
           jsonData.data
         ),
-				(err)=>{err.status == 401?navigation.navigate('Login'):alert(err)}
+				(err)=>{err.status == 401?currContext.setUser(null):alert(err)}
       )
 	},[reRender]);
 
@@ -37,7 +36,7 @@ export default function ProductList({navigation}){
       <View style={styles.content}>
 
         <Button onPress={()=>{
-        		axios.post(`${baseAddr}/auth/logout/`)
+        		apiClient.post('/auth/logout/')
         		.then(currContext.setUser(null))
         		.catch((e)=>alert(e))
 					}
@@ -48,7 +47,6 @@ export default function ProductList({navigation}){
     		{ currContext.userdata && currContext.userdata.user.isAdmin && (
 					<Button onPress={()=>navigation.navigate('Add', {
 		    			setreRender,
-		    			baseAddr:baseAddr
 		    		})}>
 		          Add a Product
 	        </Button>)
@@ -72,7 +70,6 @@ export default function ProductList({navigation}){
 								<Card.Actions>
 									<Button onPress={()=>navigation.navigate('Details', {
 										currentItem:item,
-										baseAddr:baseAddr,
 										setreRender
 									})}>
 											Details

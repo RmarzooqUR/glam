@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react';
 import {View, StyleSheet} from 'react-native';
 import { TextInput, Title, Button } from 'react-native-paper';
-import axios from 'axios';
+import {apiClient} from './apiClient';
 import AuthContxt from './contexts/AuthContext';
 
 
@@ -23,11 +23,7 @@ export default function ProductEdit({ route, navigation }){
     }
 
     const handleFormSubmit = ()=>{
-        axios.put(
-            route.params.baseAddr
-            +'/products/'
-            +route.params.currentItem.id
-            +'/edit', {
+        apiClient.put(`/products/${route.params.currentItem.id}/edit`, {
                 ...values,
                 headers:{
                     'Cookie':`Token ${currContext.userdata.access_token}`
@@ -37,13 +33,13 @@ export default function ProductEdit({ route, navigation }){
             .then(route.params.setActive(values))
             .then(navigation.navigate('Products'))
             .then(route.params.setreRender((prev)=>!prev))
-            .catch((e)=>alert(e))
+            .catch((e)=>{err.status == 401?currContext.setUser(null):alert(err)})
     };
 
     return (
         <View style={styles.content}>
             <Button onPress={()=>{
-                    axios.post(`${route.params.baseAddr}/auth/logout/`)
+                    apiClient.post('/auth/logout/')
                     .then(currContext.setUser(null))
                     .catch((e)=>alert(e))
                         }
