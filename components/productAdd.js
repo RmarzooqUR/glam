@@ -28,28 +28,40 @@ export default function ProductAdd({ route, navigation }){
               'Cookie':`Token ${currContext.userdata.access_token}`
             }
         })
-        .then(alert("Item added"))
+        .then(
+        	()=>alert("Item added"),
+        	(e)=>{e.status == 401?currContext.setUser(null):alert(e)})
         .then(navigation.goBack())
         .then(route.params.setreRender((prev)=>!prev))
-        .catch((e)=>{err.status == 401?currContext.setUser(null):alert(err)})
+        .catch((e)=>alert(e))
 	}
 
 	return (
 		<View style={styles.content}>
 			<Title>Add a new Product</Title>
 			<TextInput label="Title"
+        mode='outlined'
+        style={styles.text}
         onChangeText={(e) => handleChangeText(e, "title")}
 			/>
 			<TextInput label="Description" multiline={true}
+        mode='outlined'
+        style={styles.text}
         onChangeText={(e) => handleChangeText(e, "description")}
 			/>
 			<TextInput label="Price"
+        mode='outlined'
+        style={styles.text}
         onChangeText={(e) => handleChangeText(e, "price")}
 			/>
 			<TextInput label="Quantity"
+        mode='outlined'
+        style={styles.text}
         onChangeText={(e) => handleChangeText(e, "qty")}
 			/>
-			<Button onPress={
+			<Button
+				style={styles.text}
+				onPress={
 				()=>handleFormSubmit()
 			}>Add</Button>
 		</View>
@@ -59,5 +71,8 @@ export default function ProductAdd({ route, navigation }){
 const styles=StyleSheet.create({
 	content:{
 		padding:10
-	}
+	},
+	text:{
+        marginTop:24
+    }
 });

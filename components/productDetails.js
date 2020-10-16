@@ -15,10 +15,12 @@ export default function ProductDetails({ route, navigation }){
         headers:{
           'Cookie':`Token ${currContext.userdata.access_token}`
         }})
-    .then(alert("Item deleted"))
+    .then(
+      ()=>alert("Item deleted"),
+      (e)=>{e.status == 401?currContext.setUser(null):alert(e)})
     .then(navigation.goBack())
     .then(route.params.setreRender((prev)=>!prev))
-    .catch((e)=>{err.status == 401?currContext.setUser(null):alert(err)})
+    .catch((e)=>alert(e))
   }
 
 

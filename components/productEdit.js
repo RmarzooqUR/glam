@@ -29,33 +29,45 @@ export default function ProductEdit({ route, navigation }){
                     'Cookie':`Token ${currContext.userdata.access_token}`
                 }
             })
-            .then(alert("Item edited"))
+            .then(
+                ()=>alert("Item edited"),
+                (e)=>{e.status == 401?currContext.setUser(null):alert(e)})
             .then(route.params.setActive(values))
             .then(navigation.navigate('Products'))
             .then(route.params.setreRender((prev)=>!prev))
-            .catch((e)=>{err.status == 401?currContext.setUser(null):alert(err)})
+            .catch((e)=>alert(e))
     };
 
     return (
         <View style={styles.content}>
 			<Title>Edit this Product</Title>
-            <TextInput label="Title" 
+            <TextInput label="Title"
+                mode='outlined'
+                style={styles.text}
                 defaultValue={item.title}
                 onChangeText={(e) => handleTextChange(e, "title")}
             />
 			<TextInput label="Description" multiline={true}
+                mode='outlined'
+                style={styles.text}
                 defaultValue = {item.description}
                 onChangeText={(e) => handleTextChange(e, "description")}
             />
 			<TextInput label="Price"
+                mode='outlined'
+                style={styles.text}
                 defaultValue = {''+item.price}
                 onChangeText={(e) => handleTextChange(+e, "price")}
             />
 			<TextInput label="Quantity"
+                mode='outlined'
+                style={styles.text}
                 defaultValue={''+item.qty}
                 onChangeText={(e) => handleTextChange(+e, "qty")}
             />
-			<Button onPress={
+			<Button
+                style={styles.text}
+                onPress={
                 ()=>handleFormSubmit()
             }>Edit</Button>
 		</View>
@@ -65,5 +77,8 @@ export default function ProductEdit({ route, navigation }){
 const styles = StyleSheet.create({
     content:{
         padding:10
+    },
+    text:{
+        marginTop:24
     }
 });
