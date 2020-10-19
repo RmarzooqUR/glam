@@ -23,14 +23,23 @@ export default function ProductAdd({ route, navigation }){
 	}
 
 	const handleFormSubmit = () => {
-    apiClient.post('/products/add',{...values,
+    apiClient.post('/products/add',{...values},
+        {
             headers:{
-              'Cookie':`Token ${currContext.userdata.access_token}`
-            }
-        })
+                'Cookie':`Token=${currContext.userdata.access_token}`
+            }}
+        )
         .then(
         	()=>alert("Item added"),
-        	(e)=>{e.status == 401?currContext.setUser(null):alert(e)})
+        	(e)=>{
+                if(e.response.status==401){
+                  alert(JSON.stringify(e.response.data));
+                  currContext.setUser(null);
+                }
+                else{
+                  alert(JSON.stringify(e.response.data))
+                }
+            })
         .then(navigation.goBack())
         .then(route.params.setreRender((prev)=>!prev))
         .catch((e)=>alert(e))
@@ -40,24 +49,26 @@ export default function ProductAdd({ route, navigation }){
 		<View style={styles.content}>
 			<Title>Add a new Product</Title>
 			<TextInput label="Title"
-        mode='outlined'
-        style={styles.text}
-        onChangeText={(e) => handleChangeText(e, "title")}
+                mode='outlined'
+                style={styles.text}
+                onChangeText={(e) => handleChangeText(e, "title")}
 			/>
 			<TextInput label="Description" multiline={true}
-        mode='outlined'
-        style={styles.text}
-        onChangeText={(e) => handleChangeText(e, "description")}
+                mode='outlined'
+                style={styles.text}
+                onChangeText={(e) => handleChangeText(e, "description")}
 			/>
 			<TextInput label="Price"
-        mode='outlined'
-        style={styles.text}
-        onChangeText={(e) => handleChangeText(e, "price")}
+                mode='outlined'
+                style={styles.text}
+                keyboardType = {'numeric'}
+                onChangeText={(e) => handleChangeText(e, "price")}
 			/>
 			<TextInput label="Quantity"
-        mode='outlined'
-        style={styles.text}
-        onChangeText={(e) => handleChangeText(e, "qty")}
+                mode='outlined'
+                style={styles.text}
+                keyboardType = {'numeric'}
+                onChangeText={(e) => handleChangeText(e, "qty")}
 			/>
 			<Button
 				style={styles.text}

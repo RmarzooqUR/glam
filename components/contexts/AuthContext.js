@@ -21,30 +21,23 @@ function AuthContextProvider({ children }){
 	const loginUser = (values)=>{
 		apiClient.post('/auth/login/',{...values})
 			.then((resp)=>{
-				if(resp.status != 200){
-					alert(resp)
-				}
-				else {
-					// set user data to asyncstorage and to context here
-					setContextAndStorage(resp.data)
-				}
-			})
-			.catch((e)=>alert(e));
+				// set user data to asyncstorage and to context here
+				setContextAndStorage(resp.data)
+			},
+			(e)=> {alert(JSON.stringify(e.response.data))}
+			)
 		};
 
 
-	const signupUser = (values,navigation)=>{
+	const signupUser = (values)=>{
 		apiClient.post('/auth/register/',{...values})
 			.then((resp)=>{
-				if(resp.status != 201){
-					alert(resp)
-				}
-				else {
-					alert('You can now login')
-					navigation.navigate('Login')
-				}
-			})
-			.catch((e)=>alert(e))};
+				// alert('You can now login')
+				// navigation.navigate('Login')
+				setContextAndStorage(resp.data)
+			},
+			(e)=>{alert(JSON.stringify(e.response.data))}
+		)};
 
 
 
@@ -61,6 +54,7 @@ function AuthContextProvider({ children }){
 		};
 
 		fetchFromStorage();
+		// could set default axios instance cookie here
 	},[]);
 
 

@@ -23,15 +23,24 @@ export default function ProductEdit({ route, navigation }){
     }
 
     const handleFormSubmit = ()=>{
-        apiClient.put(`/products/${route.params.currentItem.id}/edit`, {
-                ...values,
+        apiClient.put(`/products/${route.params.currentItem.id}/edit`, {...values}, 
+            {
                 headers:{
-                    'Cookie':`Token ${currContext.userdata.access_token}`
+                    'Cookie':`Token=${currContext.userdata.access_token}`
                 }
             })
             .then(
                 ()=>alert("Item edited"),
-                (e)=>{e.status == 401?currContext.setUser(null):alert(e)})
+                (e)=>{
+                    if(e.response.status==401){
+                      alert(JSON.stringify(e.response.data));
+                      currContext.setUser(null);
+                    }
+                    else{
+                      alert(JSON.stringify(e.response.data))
+                    }
+                }
+            )
             .then(route.params.setActive(values))
             .then(navigation.navigate('Products'))
             .then(route.params.setreRender((prev)=>!prev))
@@ -57,12 +66,14 @@ export default function ProductEdit({ route, navigation }){
                 mode='outlined'
                 style={styles.text}
                 defaultValue = {''+item.price}
+                keyboardType = {'numeric'}
                 onChangeText={(e) => handleTextChange(+e, "price")}
             />
 			<TextInput label="Quantity"
                 mode='outlined'
                 style={styles.text}
                 defaultValue={''+item.qty}
+                keyboardType = {'numeric'}
                 onChangeText={(e) => handleTextChange(+e, "qty")}
             />
 			<Button

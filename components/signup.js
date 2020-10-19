@@ -4,7 +4,6 @@ import { TextInput, Button, Text } from 'react-native-paper';
 import AuthForm from './common/authform';
 import AuthContxt from './contexts/AuthContext';
 
-
 export default function Signup({ navigation }){
 	const [values, setValues] =  useState({})
 	const {signupUser} = useContext(AuthContxt)
@@ -16,7 +15,7 @@ export default function Signup({ navigation }){
 	}
 
 	const handleFormSubmit = () => {
-		signupUser(values, navigation)
+		signupUser(values)
 	}
 
   return (

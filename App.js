@@ -42,7 +42,7 @@ function LogoutBtn({navigation}){
 	  <Button onPress={()=>{
 	  		apiClient.post('/auth/logout/')
 	  		.then(currContext.setUser(null))
-	  		.catch((e)=>alert(e))
+	  		.catch((e)=>alert(JSON.stringify(e.response.data)))
 			}
 	  }>
 	    Logout

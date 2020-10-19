@@ -13,11 +13,20 @@ export default function ProductDetails({ route, navigation }){
   const handleDelete= () =>{
     apiClient.delete(`/products/${active.id}/delete`,{
         headers:{
-          'Cookie':`Token ${currContext.userdata.access_token}`
+          'Cookie':`Token=${currContext.userdata.access_token}`
         }})
     .then(
       ()=>alert("Item deleted"),
-      (e)=>{e.status == 401?currContext.setUser(null):alert(e)})
+      (e)=>{
+        if(e.response.status==401){
+          alert(JSON.stringify(e.response.data));
+          currContext.setUser(null);
+        }
+        else{
+          alert(JSON.stringify(e.response.data))
+        }
+      }
+    )
     .then(navigation.goBack())
     .then(route.params.setreRender((prev)=>!prev))
     .catch((e)=>alert(e))
@@ -30,7 +39,7 @@ export default function ProductDetails({ route, navigation }){
       <Paragraph>{active.description}</Paragraph>
       <Paragraph>Price: {active.price}</Paragraph>
       <Paragraph>Quantity left: {active.qty}</Paragraph>
-      { currContext.userdata && currContext.userdata.user.isAdmin && (
+      { currContext.userdata && currContext.userdata.user.is_admin && (
         <View>
           <Button onPress={
                       ()=>navigation.navigate('Edit', {

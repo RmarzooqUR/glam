@@ -21,12 +21,20 @@ export default function ProductList({navigation}){
 	useEffect(()=>{
 		// https://gorest.co.in/public-api/posts
 		apiClient.get('/products/',{headers:{
-			'Cookie':`Token ${currContext.userdata.access_token}`
+			'Cookie':`Token=${currContext.userdata.access_token}`
 		}})
 			.then((jsonData)=>setProductList(
           jsonData.data
         ),
-				(err)=>{err.status == 401?currContext.setUser(null):alert(err)}
+				(e)=>{
+	        if(e.response.status==401){
+	          alert(JSON.stringify(e.response.data));
+	          currContext.setUser(null);
+	        }
+	        else{
+	          alert(JSON.stringify(e.response.data))
+	        }
+	      }
       )
 	},[reRender]);
 
@@ -35,7 +43,7 @@ export default function ProductList({navigation}){
     <View>
       <View style={styles.content}>
 
-    		{ currContext.userdata && currContext.userdata.user.isAdmin && (
+    		{ currContext.userdata && currContext.userdata.user.is_admin && (
 					<Button 
 						onPress={()=>navigation.navigate('Add', {
 	    			setreRender,
