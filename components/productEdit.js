@@ -23,18 +23,13 @@ export default function ProductEdit({ route, navigation }){
     }
 
     const handleFormSubmit = ()=>{
-        apiClient.put(`/products/${route.params.currentItem.id}/edit`, {...values}, 
-            {
-                headers:{
-                    'Cookie':`Token=${currContext.userdata.access_token}`
-                }
-            })
+        apiClient.put(`/products/${route.params.currentItem.id}/edit`, {...values})
             .then(
                 ()=>alert("Item edited"),
                 (e)=>{
                     if(e.response.status==401){
                       alert(JSON.stringify(e.response.data));
-                      currContext.setUser(null);
+                      currContext.logoutUser();
                     }
                     else{
                       alert(JSON.stringify(e.response.data))

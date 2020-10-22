@@ -11,16 +11,13 @@ export default function ProductDetails({ route, navigation }){
   const currContext = useContext(AuthContxt);
 
   const handleDelete= () =>{
-    apiClient.delete(`/products/${active.id}/delete`,{
-        headers:{
-          'Cookie':`Token=${currContext.userdata.access_token}`
-        }})
+    apiClient.delete(`/products/${active.id}/delete`)
     .then(
       ()=>alert("Item deleted"),
       (e)=>{
         if(e.response.status==401){
           alert(JSON.stringify(e.response.data));
-          currContext.setUser(null);
+          currContext.logoutUser();
         }
         else{
           alert(JSON.stringify(e.response.data))

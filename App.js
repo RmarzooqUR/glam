@@ -39,12 +39,7 @@ export default function App() {
 function LogoutBtn({navigation}){
 	const currContext = useContext(AuthContxt);
 	return(
-	  <Button onPress={()=>{
-	  		apiClient.post('/auth/logout/')
-	  		.then(currContext.setUser(null))
-	  		.catch((e)=>alert(JSON.stringify(e.response.data)))
-			}
-	  }>
+	  <Button onPress={()=>currContext.logoutUser()}>
 	    Logout
 	  </Button>
 	)

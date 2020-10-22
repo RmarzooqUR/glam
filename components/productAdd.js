@@ -23,18 +23,13 @@ export default function ProductAdd({ route, navigation }){
 	}
 
 	const handleFormSubmit = () => {
-    apiClient.post('/products/add',{...values},
-        {
-            headers:{
-                'Cookie':`Token=${currContext.userdata.access_token}`
-            }}
-        )
+    apiClient.post('/products/add',{...values})
         .then(
         	()=>alert("Item added"),
         	(e)=>{
                 if(e.response.status==401){
                   alert(JSON.stringify(e.response.data));
-                  currContext.setUser(null);
+                  currContext.logoutUser();
                 }
                 else{
                   alert(JSON.stringify(e.response.data))

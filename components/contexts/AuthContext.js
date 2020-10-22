@@ -8,8 +8,11 @@ function AuthContextProvider({ children }){
 	const [userdata, setUserdata] = useState();
 
 	const setContextAndStorage = async (newdata) =>{
-		setUserdata(newdata);
 		try{
+			setUserdata(newdata);
+			if(newdata){
+				apiClient.defaults.headers.common['Authorization']=`Bearer ${newdata.access_token}`
+			}
 			const jsonString = JSON.stringify(newdata);
 			await AsyncStorage.setItem('userdata', jsonString);
 		}catch(e){
@@ -25,8 +28,9 @@ function AuthContextProvider({ children }){
 				setContextAndStorage(resp.data)
 			},
 			(e)=> {alert(JSON.stringify(e.response.data))}
-			)
-		};
+		)
+		.catch(e=>alert(e))
+	};
 
 
 	const signupUser = (values)=>{
@@ -37,7 +41,22 @@ function AuthContextProvider({ children }){
 				setContextAndStorage(resp.data)
 			},
 			(e)=>{alert(JSON.stringify(e.response.data))}
-		)};
+		)
+		.catch(e=>alert(e))
+	};
+
+
+	const logoutUser = () =>{
+		delete apiClient.defaults.headers.common['Authorization']
+		apiClient.post('/auth/logout/')
+		.then(
+			(res)=>{
+				setContextAndStorage(null);
+			},
+			(e)=>alert(JSON.stringify(e.response.data))
+		)
+		.catch((e)=>alert(e))
+	}
 
 
 
@@ -50,7 +69,7 @@ function AuthContextProvider({ children }){
     	}catch(e){
       	console.log(e);
     	}
-    	jsonString != null? setUserdata(JSON.parse(jsonString)):setUserdata(null)
+    	jsonString != null? setContextAndStorage(JSON.parse(jsonString)):setContextAndStorage(null)
 		};
 
 		fetchFromStorage();
@@ -65,6 +84,7 @@ function AuthContextProvider({ children }){
 					setUser: setContextAndStorage,
 					loginUser:loginUser,
 					signupUser:signupUser,
+					logoutUser:logoutUser,
 				}
 			}>
 				{ children }
