@@ -25,21 +25,21 @@ export default function ProductEdit({ route, navigation }){
     const handleFormSubmit = ()=>{
         apiClient.put(`/products/${route.params.currentItem.id}/edit`, {...values})
             .then(
-                ()=>alert("Item edited"),
+                ()=>currContext.setErrors("Item edited"),
                 (e)=>{
                     if(e.response.status==401){
-                      alert(JSON.stringify(e.response.data));
+                      currContext.setErrors(e.response.data);
                       currContext.logoutUser();
                     }
                     else{
-                      alert(JSON.stringify(e.response.data))
+                      currContext.setErrors(e.response.data)
                     }
                 }
             )
             .then(route.params.setActive(values))
             .then(navigation.navigate('Products'))
             .then(route.params.setreRender((prev)=>!prev))
-            .catch((e)=>alert(e))
+            .catch((e)=>currContext.setErrors(e))
     };
 
     return (

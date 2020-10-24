@@ -1,8 +1,11 @@
 import 'react-native-gesture-handler';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
-import React, { useContext } from 'react';
-import { DefaultTheme, Provider as PaperProvider, Button } from 'react-native-paper';
+import React, { useState, useContext, useEffect } from 'react';
+import { DefaultTheme, 
+	Provider as PaperProvider, 
+	Button,
+	Portal, Snackbar, Text } from 'react-native-paper';
 import ProductList from './components/productList';
 import ProductDetails from './components/productDetails';
 import ProductEdit from './components/productEdit';
@@ -26,24 +29,40 @@ const Stack = createStackNavigator();
 
 
 export default function App() {
+	[errorVisibility, setErrorVisibility] = useState(false);
+	[errorMsg, setErrorMsg] = useState(null);
+
 
   return (
-    <AuthContextProvider>
-      <PaperProvider theme={theme}>
-        <AppContent />
-      </PaperProvider>
+    <AuthContextProvider 
+    	setErrorVisibility={setErrorVisibility}
+    	setErrorMsg={setErrorMsg}>
+	      <PaperProvider theme={theme}>
+	        <AppContent />
+	        {errorMsg && <AppErrors 
+							        	errorVisibility={errorVisibility}
+							        	setErrorVisibility={setErrorVisibility}
+							        	errorMsg={errorMsg} />}
+	      </PaperProvider>
     </AuthContextProvider>
   );
 }
 
-function LogoutBtn({navigation}){
-	const currContext = useContext(AuthContxt);
-	return(
-	  <Button onPress={()=>currContext.logoutUser()}>
-	    Logout
-	  </Button>
-	)
+
+
+function AppErrors({errorVisibility, setErrorVisibility, errorMsg}){
+	return (
+			<Portal>
+				<Snackbar
+					visible={errorVisibility}
+					onDismiss={()=>setErrorVisibility(!errorVisibility)}>
+					{JSON.stringify(errorMsg)}
+				</Snackbar>
+			</Portal>
+		)
 }
+
+
 
 
 function AppContent(){
@@ -101,3 +120,14 @@ function AppContent(){
       </NavigationContainer>
 		)
 }
+
+
+function LogoutBtn({navigation}){
+	const currContext = useContext(AuthContxt);
+	return(
+	  <Button onPress={()=>currContext.logoutUser()}>
+	    Logout
+	  </Button>
+	)
+}
+

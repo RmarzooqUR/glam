@@ -13,20 +13,20 @@ export default function ProductDetails({ route, navigation }){
   const handleDelete= () =>{
     apiClient.delete(`/products/${active.id}/delete`)
     .then(
-      ()=>alert("Item deleted"),
+      ()=>currContext.setErrors("Item deleted"),
       (e)=>{
         if(e.response.status==401){
-          alert(JSON.stringify(e.response.data));
+          currContext.setErrors(e.response.data);
           currContext.logoutUser();
         }
         else{
-          alert(JSON.stringify(e.response.data))
+          currContext.setErrors(e.response.data)
         }
       }
     )
     .then(navigation.goBack())
     .then(route.params.setreRender((prev)=>!prev))
-    .catch((e)=>alert(e))
+    .catch((e)=>currContext.setErrors(e))
   }
 
 

@@ -26,11 +26,11 @@ export default function ProductList({navigation}){
 						setProductList(jsonData.data)},
 					(e)=>{
 		        if(e.response.status==401){
-		          alert(JSON.stringify(e.response.data));
+		          currContext.setErrors(e.response.data);
 		          currContext.logoutUser();
 		        }
 		        else{
-		          alert(JSON.stringify(e.response.data))
+		          currContext.setErrors(e.response.data)
 		        }
 		      }
 	  		);

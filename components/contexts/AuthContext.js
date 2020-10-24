@@ -4,8 +4,9 @@ import { apiClient } from '../apiClient';
 
 const AuthContxt = createContext();
 
-function AuthContextProvider({ children }){
+function AuthContextProvider({ children, setErrorVisibility, setErrorMsg }){
 	const [userdata, setUserdata] = useState();
+
 
 	const setContextAndStorage = async (newdata) =>{
 		try{
@@ -21,28 +22,31 @@ function AuthContextProvider({ children }){
 	}
 
 
+	const setErrors = (msg) =>{
+		setErrorMsg(msg);
+		setErrorVisibility(true);
+	}
+
 	const loginUser = (values)=>{
 		apiClient.post('/auth/login/',{...values})
 			.then((resp)=>{
 				// set user data to asyncstorage and to context here
 				setContextAndStorage(resp.data)
 			},
-			(e)=> {alert(JSON.stringify(e.response.data))}
+			(e)=> {setErrors(e.response.data)}
 		)
-		.catch(e=>alert(e))
+		.catch(e=>setErrors(e))
 	};
 
 
 	const signupUser = (values)=>{
 		apiClient.post('/auth/register/',{...values})
 			.then((resp)=>{
-				// alert('You can now login')
-				// navigation.navigate('Login')
 				setContextAndStorage(resp.data)
 			},
-			(e)=>{alert(JSON.stringify(e.response.data))}
+			(e)=>{setErrors(e.response.data)}
 		)
-		.catch(e=>alert(e))
+		.catch(e=>setErrors(e))
 	};
 
 
@@ -53,9 +57,9 @@ function AuthContextProvider({ children }){
 			(res)=>{
 				setContextAndStorage(null);
 			},
-			(e)=>alert(JSON.stringify(e.response.data))
+			(e)=>setErrors(e.response.data)
 		)
-		.catch((e)=>alert(e))
+		.catch((e)=>setErrors(e))
 	}
 
 
@@ -85,6 +89,7 @@ function AuthContextProvider({ children }){
 					loginUser:loginUser,
 					signupUser:signupUser,
 					logoutUser:logoutUser,
+					setErrors:setErrors,
 				}
 			}>
 				{ children }

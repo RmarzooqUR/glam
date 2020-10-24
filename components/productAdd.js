@@ -25,19 +25,19 @@ export default function ProductAdd({ route, navigation }){
 	const handleFormSubmit = () => {
     apiClient.post('/products/add',{...values})
         .then(
-        	()=>alert("Item added"),
+        	()=>currContext.setErrors("Item added"),
         	(e)=>{
                 if(e.response.status==401){
-                  alert(JSON.stringify(e.response.data));
+                  currContext.setErrors(e.response.data);
                   currContext.logoutUser();
                 }
                 else{
-                  alert(JSON.stringify(e.response.data))
+                  currContext.setErrors(e.response.data)
                 }
             })
         .then(navigation.goBack())
         .then(route.params.setreRender((prev)=>!prev))
-        .catch((e)=>alert(e))
+        .catch((e)=>currContext.setErrors(e))
 	}
 
 	return (
