@@ -1,11 +1,11 @@
 import 'react-native-gesture-handler';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
 import { DefaultTheme, 
 	Provider as PaperProvider, 
 	Button,
-	Portal, Snackbar, Text } from 'react-native-paper';
+	Portal, Snackbar } from 'react-native-paper';
 import ProductList from './components/productList';
 import ProductDetails from './components/productDetails';
 import ProductEdit from './components/productEdit';
@@ -89,20 +89,23 @@ function AppContent(){
 		            	headerRight:(navigation)=> <LogoutBtn navigation={navigation} />
 		            }}
 		          />
-		          <Stack.Screen
-		            name='Edit'
-		            component={ProductEdit}
-		            options={{
-		            	headerRight:(navigation)=> <LogoutBtn navigation={navigation} />
-		            }}
-		          />
-		          <Stack.Screen
-		            name='Add'
-		            component={ProductAdd} 
-		            options={{
-		            	headerRight:(navigation)=> <LogoutBtn navigation={navigation} />
-		            }}
-		          />
+		          {currContxt.userdata && currContxt.userdata.user.is_admin && 
+		          	<>
+				          <Stack.Screen
+				            name='Edit'
+				            component={ProductEdit}
+				            options={{
+				            	headerRight:(navigation)=> <LogoutBtn navigation={navigation} />
+				            }}
+				          />
+				          <Stack.Screen
+				            name='Add'
+				            component={ProductAdd} 
+				            options={{
+				            	headerRight:(navigation)=> <LogoutBtn navigation={navigation} />
+				            }}
+				          />
+		          	</>}
 	          </>
         	):(
         		<>
