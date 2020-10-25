@@ -13,7 +13,7 @@ export default function ProductDetails({ route, navigation }){
   const handleDelete= () =>{
     apiClient.delete(`/products/${active.id}/delete`)
     .then(
-      ()=>currContext.setErrors("Item deleted"),
+      ()=>currContext.setErrors({Success: ["Item deleted"]}),
       (e)=>{
         if(e.response.status==401){
           currContext.setErrors(e.response.data);

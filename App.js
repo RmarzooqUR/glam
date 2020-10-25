@@ -51,12 +51,27 @@ export default function App() {
 
 
 function AppErrors({errorVisibility, setErrorVisibility, errorMsg}){
+	const stringError = (error, msg) => {
+		try{
+			for (const [key, value] of Object.entries(error)){
+				if(value instanceof Array){
+					msg += `${key}`;
+					msg += `\n${stringError(value, "")}`	
+				}
+				else{
+					msg += `-${value}\n`;
+				}}}catch{
+					msg = "An unexpected error occured";
+				}
+		return msg;
+	}
+
 	return (
 			<Portal>
 				<Snackbar
 					visible={errorVisibility}
 					onDismiss={()=>setErrorVisibility(!errorVisibility)}>
-					{JSON.stringify(errorMsg)}
+					{stringError(errorMsg, "")}
 				</Snackbar>
 			</Portal>
 		)

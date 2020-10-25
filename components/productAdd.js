@@ -25,7 +25,7 @@ export default function ProductAdd({ route, navigation }){
 	const handleFormSubmit = () => {
     apiClient.post('/products/add',{...values})
         .then(
-        	()=>currContext.setErrors("Item added"),
+        	()=>currContext.setErrors({Success: ["Item added"]}),
         	(e)=>{
                 if(e.response.status==401){
                   currContext.setErrors(e.response.data);

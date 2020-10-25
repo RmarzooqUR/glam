@@ -25,7 +25,7 @@ export default function ProductEdit({ route, navigation }){
     const handleFormSubmit = ()=>{
         apiClient.put(`/products/${route.params.currentItem.id}/edit`, {...values})
             .then(
-                ()=>currContext.setErrors("Item edited"),
+                ()=>currContext.setErrors({Success:["Item edited"]}),
                 (e)=>{
                     if(e.response.status==401){
                       currContext.setErrors(e.response.data);
