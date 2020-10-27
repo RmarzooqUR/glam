@@ -10,60 +10,63 @@ import AuthContxt from './contexts/AuthContext';
 export default function ProductAdd({ route, navigation }){
   const currContext = useContext(AuthContxt);
 	const [values, setValues] = useState({
-        "title":'',
-        "description":'',
-        "price":null,
-        "qty":null
+		"title":'',
+		"description":'',
+		"price":null,
+		"qty":null
   })
 	
 	const handleChangeText = (event, param) => {
 		let temp = Object.assign(values);
-    temp[param] = event;
-    setValues((temp)=>temp);
+	temp[param] = event;
+	setValues((temp)=>temp);
 	}
 
 	const handleFormSubmit = () => {
-    apiClient.post('/products/add',{...values})
-        .then(
-        	()=>currContext.setErrors({Success: ["Item added"]}),
-        	(e)=>{
-                if(e.response.status==401){
-                  currContext.setErrors(e.response.data);
-                  currContext.logoutUser();
-                }
-                else{
-                  currContext.setErrors(e.response.data)
-                }
-            })
-        .then(navigation.goBack())
-        .then(route.params.setreRender((prev)=>!prev))
-        .catch((e)=>currContext.setErrors(e))
+	apiClient.post('/products/add',{...values})
+		.then(
+			()=>{
+				currContext.setErrors({Success: ["Item added"]});
+				navigation.goBack();
+				route.params.setreRender((prev)=>!prev);
+			},
+			(e)=>{
+				// use switch case to validate on 400
+				if(e.response.status==401){
+				  currContext.setErrors(e.response.data);
+				  currContext.logoutUser();
+				}
+				else{
+				  currContext.setErrors(e.response.data)
+				}
+			})
+		.catch((e)=>currContext.setErrors(e))
 	}
 
 	return (
 		<View style={styles.content}>
 			<Title>Add a new Product</Title>
 			<TextInput label="Title"
-                mode='outlined'
-                style={styles.text}
-                onChangeText={(e) => handleChangeText(e, "title")}
+				mode='outlined'
+				style={styles.text}
+				onChangeText={(e) => handleChangeText(e, "title")}
 			/>
 			<TextInput label="Description" multiline={true}
-                mode='outlined'
-                style={styles.text}
-                onChangeText={(e) => handleChangeText(e, "description")}
+				mode='outlined'
+				style={styles.text}
+				onChangeText={(e) => handleChangeText(e, "description")}
 			/>
 			<TextInput label="Price"
-                mode='outlined'
-                style={styles.text}
-                keyboardType = {'numeric'}
-                onChangeText={(e) => handleChangeText(e, "price")}
+				mode='outlined'
+				style={styles.text}
+				keyboardType = {'numeric'}
+				onChangeText={(e) => handleChangeText(e, "price")}
 			/>
 			<TextInput label="Quantity"
-                mode='outlined'
-                style={styles.text}
-                keyboardType = {'numeric'}
-                onChangeText={(e) => handleChangeText(e, "qty")}
+				mode='outlined'
+				style={styles.text}
+				keyboardType = {'numeric'}
+				onChangeText={(e) => handleChangeText(e, "qty")}
 			/>
 			<Button
 				style={styles.text}
@@ -79,6 +82,6 @@ const styles=StyleSheet.create({
 		padding:10
 	},
 	text:{
-        marginTop:24
-    }
+		marginTop:24
+	}
 });

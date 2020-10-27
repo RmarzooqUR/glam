@@ -89,7 +89,6 @@ export default function ProductList({navigation}){
 		      	/>
 		    	</View>
 				)}
-			
     </View>
   )
 }

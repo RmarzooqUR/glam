@@ -13,8 +13,24 @@ export default function ProductDetails({ route, navigation }){
   const handleDelete= () =>{
     apiClient.delete(`/products/${active.id}/delete`)
     .then(
-      ()=>currContext.setErrors({Success: ["Item deleted"]}),
+      ()=>{
+        currContext.setErrors({Success: ["Item deleted"]});
+        navigation.goBack();
+        route.params.setreRender((prev)=>!prev);
+      },
       (e)=>{
+        // use switch case to validate on 400
+        // switch(e.response.status){
+        //   case 401: 
+        //     currContext.setErrors(e.response.data);
+        //     currContext.logoutUser();
+        //     break;
+        //   case 400: 
+        //     setHelpertext();
+        //     break;
+        //   default: 
+        //     throw(e);
+        // }
         if(e.response.status==401){
           currContext.setErrors(e.response.data);
           currContext.logoutUser();
@@ -24,8 +40,6 @@ export default function ProductDetails({ route, navigation }){
         }
       }
     )
-    .then(navigation.goBack())
-    .then(route.params.setreRender((prev)=>!prev))
     .catch((e)=>currContext.setErrors(e))
   }
 
