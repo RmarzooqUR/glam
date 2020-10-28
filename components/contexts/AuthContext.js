@@ -27,24 +27,24 @@ function AuthContextProvider({ children, setErrorVisibility, setErrorMsg }){
 		setErrorVisibility(true);
 	}
 
-	const loginUser = (values)=>{
+	const loginUser = (values, handleFormErrors)=>{
 		apiClient.post('/auth/login/',{...values})
 			.then((resp)=>{
 				// set user data to asyncstorage and to context here
 				setContextAndStorage(resp.data)
 			},
-			(e)=> {setErrors(e.response.data)}
+			(e)=> {handleFormErrors(e.response.data)}
 		)
 		.catch(e=>setErrors(e))
 	};
 
 
-	const signupUser = (values)=>{
+	const signupUser = (values, handleFormErrors)=>{
 		apiClient.post('/auth/register/',{...values})
 			.then((resp)=>{
 				setContextAndStorage(resp.data)
 			},
-			(e)=>{setErrors(e.response.data)}
+			(e)=>{handleFormErrors(e.response.data)}
 		)
 		.catch(e=>setErrors(e))
 	};

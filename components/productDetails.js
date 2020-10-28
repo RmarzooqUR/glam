@@ -19,18 +19,6 @@ export default function ProductDetails({ route, navigation }){
         route.params.setreRender((prev)=>!prev);
       },
       (e)=>{
-        // use switch case to validate on 400
-        // switch(e.response.status){
-        //   case 401: 
-        //     currContext.setErrors(e.response.data);
-        //     currContext.logoutUser();
-        //     break;
-        //   case 400: 
-        //     setHelpertext();
-        //     break;
-        //   default: 
-        //     throw(e);
-        // }
         if(e.response.status==401){
           currContext.setErrors(e.response.data);
           currContext.logoutUser();

@@ -38,7 +38,6 @@ export default function ProductAdd({ route, navigation }){
 			 [key]:{visible:true, message:value[0]}
 			}})
 	}
-
 	const handelFormErrors = (errObj) =>{
 		for(const [key, value] of Object.entries(errObj)){
 			switch(key){
