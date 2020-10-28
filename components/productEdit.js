@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import {View, StyleSheet} from 'react-native';
-import { TextInput, Title, Button } from 'react-native-paper';
+import { TextInput, Title, Button, HelperText } from 'react-native-paper';
 import {apiClient} from './apiClient';
 import AuthContxt from './contexts/AuthContext';
 
@@ -16,11 +16,50 @@ export default function ProductEdit({ route, navigation }){
 		"qty":item.qty
 	})
 
+	const [localErrors, setLocalErrors] = useState({
+		title:{visible:false, message:''},
+		description:{visible:false, message:''},
+		price:{visible:false, message:''},
+		qty:{visible:false, message:''},
+	})
+
 	const handleTextChange = (event, param) =>{
 		let temp = Object.assign(values);
 		temp[param] = event;
 		setValues((temp)=>temp);
+		setLocalErrors((prev)=>{return {...prev, [param]:{visible:false, message:''}}})
 	}
+
+
+	const errHelper = (key,value) =>{
+		setLocalErrors((prev)=>{
+			return {
+				...prev,
+			 [key]:{visible:true, message:value[0]}
+			}})
+	}
+
+	const handelFormErrors = (errObj) =>{
+		for(const [key, value] of Object.entries(errObj)){
+			switch(key){
+				case 'title':
+					errHelper(key, value)
+					break;
+				case 'description':
+					errHelper(key,value)
+					break;
+				case 'price':
+					errHelper(key,value)
+					break;
+				case 'qty':
+					errHelper(key,value)
+					break;
+				default:
+					throw({Error:["Unexpected Error"]})
+			}
+		}
+	}
+
 
 	const handleFormSubmit = ()=>{
 		apiClient.put(`/products/${route.params.currentItem.id}/edit`, {...values})
@@ -33,12 +72,16 @@ export default function ProductEdit({ route, navigation }){
 				},
 				(e)=>{
 					// use switch case to validate on 400
-					if(e.response.status==401){
-					  currContext.setErrors(e.response.data);
-					  currContext.logoutUser();
-					}
-					else{
-					  currContext.setErrors(e.response.data)
+					switch(e.response.status){
+						case 401:
+							currContext.setErrors(e.response.data);
+							currContext.logoutUser();
+							break;
+						case 400:
+							handelFormErrors(e.response.data);	//change this
+							break;
+						default:
+							throw(e.response.data)
 					}
 				}
 			)
@@ -54,12 +97,20 @@ export default function ProductEdit({ route, navigation }){
 				defaultValue={item.title}
 				onChangeText={(e) => handleTextChange(e, "title")}
 			/>
+			{localErrors.title.visible && 
+				<HelperText type='error' visible={localErrors.title.visible}>
+					{localErrors.title.message}
+				</HelperText>}
 			<TextInput label="Description" multiline={true}
 				mode='outlined'
 				style={styles.text}
 				defaultValue = {item.description}
 				onChangeText={(e) => handleTextChange(e, "description")}
 			/>
+			{localErrors.description.visible &&
+				<HelperText type='error' visible={localErrors.description.visible}>
+					{localErrors.description.message}
+				</HelperText>}
 			<TextInput label="Price"
 				mode='outlined'
 				style={styles.text}
@@ -67,6 +118,10 @@ export default function ProductEdit({ route, navigation }){
 				keyboardType = {'numeric'}
 				onChangeText={(e) => handleTextChange(+e, "price")}
 			/>
+			{localErrors.price.visible &&
+				<HelperText type='error' visible={localErrors.price.visible}>
+					{localErrors.price.message}
+				</HelperText>}
 			<TextInput label="Quantity"
 				mode='outlined'
 				style={styles.text}
@@ -74,6 +129,10 @@ export default function ProductEdit({ route, navigation }){
 				keyboardType = {'numeric'}
 				onChangeText={(e) => handleTextChange(+e, "qty")}
 			/>
+			{localErrors.qty.visible &&
+				<HelperText type='error' visible={localErrors.qty.visible}>
+					{localErrors.qty.message}
+				</HelperText>}
 			<Button
 				style={styles.text}
 				onPress={
