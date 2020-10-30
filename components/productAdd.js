@@ -71,7 +71,7 @@ export default function ProductAdd({ route, navigation }){
 				// use switch case to validate on 400
 				switch(e.response.status){
 					case 401:
-						currContext.setErrors(e.response.data);
+						currContext.setErrors({'Error':['Your Session Has Expired']});
 						currContext.logoutUser();
 						break;
 					case 400:

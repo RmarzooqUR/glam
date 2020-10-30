@@ -26,7 +26,7 @@ export default function ProductList({navigation}){
 						setProductList(jsonData.data)},
 					(e)=>{
 		        if(e.response.status==401){
-		          currContext.setErrors(e.response.data);
+		          currContext.setErrors({'Error':['Your Session Has Expired']});
 		          currContext.logoutUser();
 		        }
 		        else{
