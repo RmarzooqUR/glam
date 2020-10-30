@@ -4,13 +4,15 @@ import { apiClient } from '../apiClient';
 
 const AuthContxt = createContext();
 
-function AuthContextProvider({ children, setErrorVisibility, setErrorMsg }){
+function AuthContextProvider(
+	{ children, setErrorVisibility, setErrorMsg, setLoadingState }){
 	const [userdata, setUserdata] = useState();
 
 
 	const setContextAndStorage = async (newdata) =>{
 		try{
 			setUserdata(newdata);
+			setLoadingState(false);
 			if(newdata){
 				apiClient.defaults.headers.common['Authorization']=`Bearer ${newdata.access_token}`
 			}
@@ -77,7 +79,6 @@ function AuthContextProvider({ children, setErrorVisibility, setErrorMsg }){
 		};
 
 		fetchFromStorage();
-		// could set default axios instance cookie here
 	},[]);
 
 
