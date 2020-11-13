@@ -1,58 +1,75 @@
-import React, { useState, useEffect, useContext }  from 'react';
-import { View } from 'react-native';
-import { TextInput, Button } from 'react-native-paper';
+import React, { useState, useContext }  from 'react';
+import { StyleSheet, Pressable } from 'react-native';
+import { TextInput, Button, Text } from 'react-native-paper';
 import AuthForm from './common/authform';
-import axios from 'axios';
 import AuthContxt from './contexts/AuthContext';
 
 export default function Login({ navigation }){
 	const [values, setValues] =  useState({})
-	const currContxt = useContext(AuthContxt)
-	//const {loginUser} = useContext(AuthContext)
-
+	const {loginUser} = useContext(AuthContxt)
+  const [fieldErrors, setFieldErrors] = useState({
+    username:{visible:false, message:''},
+    password:{visible:true, message:''},
+  })
 
 	const handleChangeText = (event, param) =>{
 		let temp = Object.assign(values);
 		temp[param] = event;
-		setValues((temp)=>temp)
+		setValues((temp)=>temp);
+    setFieldErrors((prev)=>{return {...prev, [param]:{visible:false, message:''}}});
 	}
 
 
-	const handleFormSubmit = (ctx) => {
+  const errHelper = (key,value) =>{
+    setFieldErrors((prev)=>{
+      return {
+        ...prev,
+       [key]:{visible:true, message:value[0]}
+      }})
+  }
+  const handleFormErrors = (errObj) =>{
+    for(const [key,value] of Object.entries(errObj)){
+      switch(key){
+        case 'username':
+          errHelper(key,value);
+          break;
+        case 'password':
+          errHelper(key,value);
+          break;
+        default:
+          throw(errObj);
+          break;
+      }
+    }
+  }
 
-		// currContxt.loginUser(values, navigation)
-
-
-		axios.post(
-				'http://192.168.0.106:8000/auth/login/',
-				{
-					...values
-				}
-			)
-			.then((resp)=>{
-				if(resp.status != 200){
-					alert(JSON.stringify(resp))
-				}
-				else {
-					// set user data to asyncstorage and to context here
-					// ctx.setUserdata(resp.data)
-					currContxt.setUser(resp.data)
-					navigation.push('Products')
-				}
-			})
-			.catch((e)=>alert(JSON.stringify(e)))
+	const handleFormSubmit = () => {
+		loginUser(values, handleFormErrors)
 	}
-
-	// useEffect(()=>{
-			// if context is already set (from AuthContext's useEffect)
-			// navigate to productList (use context and not withCredentials)
-	// })
-
 
   return (
-	 	<AuthForm pword1='password' handleChangeText={handleChangeText}>
-	 		<Button onPress={ () => handleFormSubmit() }>Login</Button>
-	 		<Button onPress={ () => navigation.navigate('Signup') }>Signup Instead</Button>
+	 	<AuthForm 
+	 		pword1='password' 
+	 		handleChangeText={handleChangeText}
+	 		fieldErrors={fieldErrors}>
+	 		<Button 
+	 			mode='contained'
+	 			style={styles.input}
+	 			onPress={ () => handleFormSubmit() }>Login
+ 			</Button>
+	 		<Pressable 
+	 			onPress={ () => navigation.navigate('Signup') }
+	 			android_ripple>
+	 				<Text>New User? <Text style={{color:'coral'}}>SignUp</Text></Text>
+	 		</Pressable>
    	</AuthForm>
  	);	
 }
+
+
+const styles = StyleSheet.create({
+  input:{
+  	marginBottom:24,
+  	padding:8
+  }
+});

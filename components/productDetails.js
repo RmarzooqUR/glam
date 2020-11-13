@@ -3,7 +3,7 @@ import {View, Text, StyleSheet} from 'react-native';
 import { Button,
   Paragraph,
   Title } from 'react-native-paper';
-import axios from 'axios';
+import {apiClient} from './apiClient';
 import AuthContxt from './contexts/AuthContext';
 
 export default function ProductDetails({ route, navigation }){
@@ -11,39 +11,39 @@ export default function ProductDetails({ route, navigation }){
   const currContext = useContext(AuthContxt);
 
   const handleDelete= () =>{
-    axios.delete(
-      `${route.params.baseAddr}/products/${active.id}/delete`,
-      {
-        withCredentials:true,
-      })
-    .then(alert("Item deleted"))
-    .then(route.params.setreRender((prev)=>!prev))
-    .then(navigation.goBack())
-    .catch((e)=>alert(e))
+    apiClient.delete(`/products/${active.id}/delete`)
+    .then(
+      ()=>{
+        currContext.setErrors({Success: ["Item deleted"]});
+        navigation.goBack();
+        route.params.setreRender((prev)=>!prev);
+      },
+      (e)=>{
+        if(e.response.status==401){
+          currContext.setErrors({'Error':['Your Session Has Expired']});
+          currContext.logoutUser();
+        }
+        else{
+          currContext.setErrors(e.response.data)
+        }
+      }
+    )
+    .catch((e)=>currContext.setErrors(e))
   }
 
 
   return (
     <View style={styles.content}>
-      <Button onPress={()=>{
-          axios.post(`${route.params.baseAddr}/auth/logout/`)
-          .then(navigation.navigate('Login'))
-          .catch((e)=>alert(e))
-        }
-      }>
-        Logout
-      </Button>
       <Title>{active.title}</Title>
       <Paragraph>{active.description}</Paragraph>
       <Paragraph>Price: {active.price}</Paragraph>
       <Paragraph>Quantity left: {active.qty}</Paragraph>
-      {currContext.userdata.user.isAdmin && (
+      { currContext.userdata && currContext.userdata.user.is_admin && (
         <View>
           <Button onPress={
                       ()=>navigation.navigate('Edit', {
                         ...route.params,
                         setActive,
-                        baseAddr:route.params.baseAddr
                       })}>
                     Edit</Button>
                     

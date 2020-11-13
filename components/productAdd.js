@@ -1,66 +1,133 @@
-import React , {useState, useEffect} from 'react';
+import React , {useState, useContext } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Button, 
 	Title,
-	TextInput, } from 'react-native-paper';
-import axios from 'axios';
+	TextInput, HelperText } from 'react-native-paper';
+import {apiClient} from './apiClient';
+import AuthContxt from './contexts/AuthContext';
 
 
 export default function ProductAdd({ route, navigation }){
-	
+  const currContext = useContext(AuthContxt);
 	const [values, setValues] = useState({
-        "title":'',
-        "description":'',
-        "price":null,
-        "qty":null
+		"title":'',
+		"description":'',
+		"price":null,
+		"qty":null
   })
-	
+
+	const [localErrors, setLocalErrors] = useState({
+		title:{visible:false, message:''},
+		description:{visible:false, message:''},
+		price:{visible:false, message:''},
+		qty:{visible:false, message:''},
+	})
+
 	const handleChangeText = (event, param) => {
 		let temp = Object.assign(values);
-    temp[param] = event;
-    setValues((temp)=>temp);
+		temp[param] = event;
+		setValues((temp)=>temp);
+		setLocalErrors((prev)=>{return {...prev, [param]:{visible:false, message:''}}})
+	}
+
+
+	const errHelper = (key,value) =>{
+		setLocalErrors((prev)=>{
+			return {
+				...prev,
+			 [key]:{visible:true, message:value[0]}
+			}})
+	}
+	const handelFormErrors = (errObj) =>{
+		for(const [key, value] of Object.entries(errObj)){
+			switch(key){
+				case 'title':
+					errHelper(key, value)
+					break;
+				case 'description':
+					errHelper(key,value)
+					break;
+				case 'price':
+					errHelper(key,value)
+					break;
+				case 'qty':
+					errHelper(key,value)
+					break;
+				default:
+					throw({Error:["Unexpected Error"]})
+			}
+		}
 	}
 
 	const handleFormSubmit = () => {
-    axios.post(
-        `${route.params.baseAddr}/products/add`,
-        {
-            "title":values.title,
-            "description":values.description,
-            "price":values.price,
-            "qty":values.qty,
-            withCredentials:true,
-        })
-        .then(alert("Item added"))
-        .then(route.params.setreRender((prev)=>!prev))
-        .then(navigation.goBack())
-        .catch((e)=>alert(e))
+	apiClient.post('/products/add',{...values})
+		.then(
+			()=>{
+				currContext.setErrors({Success: ["Item added"]});
+				navigation.goBack();
+				route.params.setreRender((prev)=>!prev);
+			},
+			(e)=>{
+				// use switch case to validate on 400
+				switch(e.response.status){
+					case 401:
+						currContext.setErrors({'Error':['Your Session Has Expired']});
+						currContext.logoutUser();
+						break;
+					case 400:
+						handelFormErrors(e.response.data);	//change this
+						break;
+					default:
+						throw(e.response.data)
+				}
+			})
+		.catch((e)=>currContext.setErrors(e))
 	}
 
 	return (
 		<View style={styles.content}>
-      <Button onPress={()=>{
-      		axios.post(`${baseAddr}/auth/logout/`)
-      		.then(navigation.navigate('Login'))
-      		.catch((e)=>alert(e))
-				}
-      }>
-        Logout
-      </Button>
 			<Title>Add a new Product</Title>
 			<TextInput label="Title"
-        onChangeText={(e) => handleChangeText(e, "title")}
+				mode='outlined'
+				style={styles.text}
+				onChangeText={(e) => handleChangeText(e, "title")}
 			/>
+			{localErrors.title.visible && 
+				<HelperText type='error' visible={localErrors.title.visible}>
+					{localErrors.title.message}
+				</HelperText>}
 			<TextInput label="Description" multiline={true}
-        onChangeText={(e) => handleChangeText(e, "description")}
+				mode='outlined'
+				style={styles.text}
+				onChangeText={(e) => handleChangeText(e, "description")}
 			/>
+			{localErrors.description.visible &&
+				<HelperText type='error' visible={localErrors.description.visible}>
+					{localErrors.description.message}
+				</HelperText>}
 			<TextInput label="Price"
-        onChangeText={(e) => handleChangeText(e, "price")}
+				mode='outlined'
+				style={styles.text}
+				keyboardType = {'numeric'}
+				onChangeText={(e) => handleChangeText(e, "price")}
 			/>
+			{localErrors.price.visible &&
+				<HelperText type='error' visible={localErrors.price.visible}>
+					{localErrors.price.message}
+				</HelperText>}
 			<TextInput label="Quantity"
-        onChangeText={(e) => handleChangeText(e, "qty")}
+				mode='outlined'
+				style={styles.text}
+				keyboardType = {'numeric'}
+				onChangeText={(e) => handleChangeText(e, "qty")}
 			/>
-			<Button onPress={
+			{localErrors.qty.visible &&
+				<HelperText type='error' visible={localErrors.qty.visible}>
+					{localErrors.qty.message}
+				</HelperText>}
+			<Button
+				style={styles.text}
+				onPress={
 				()=>handleFormSubmit()
 			}>Add</Button>
 		</View>
@@ -70,5 +137,8 @@ export default function ProductAdd({ route, navigation }){
 const styles=StyleSheet.create({
 	content:{
 		padding:10
+	},
+	text:{
+		marginTop:24
 	}
 });
